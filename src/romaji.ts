@@ -53,6 +53,13 @@ const ROMAJI_EQUIV_GROUPS: string[][] = [
 	["qu", "qwu"],
 	["qe", "qwe", "qye"],
 	["qo", "qwo"],
+
+	// 小書き文字
+	["xa", "la"],
+	["xi", "li", "lyi", "xyi"],
+	["xu", "lu"],
+	["xe", "le", "lye", "xye"],
+	["xo", "lo"],
 ];
 
 const ROMAJI_TOKEN_TO_EQUIV = new Map<string, string[]>();
@@ -116,6 +123,8 @@ const ROMAJI_SYLLABLE_TOKENS: string[] = (() => {
 		"f",
 		"j",
 		"q",
+		"x",
+		"l",
 	];
 	for (const b of bases) {
 		for (const v of ["a", "i", "u", "e", "o"]) tokens.add(b + v);
@@ -351,11 +360,8 @@ function tokenOptions(token: RomajiToken): string[] {
 	if (token === "ー") return ["-"]; // ここではベースのみ（母音重ねは生成時に文脈で足す）
 	if (token === "っ") return ["xtu", "ltu", "xtsu", "ltsu"]; // 次音節の子音重ねは生成時に文脈で足す
 	if (token === "ん") return ["n", "nn", "xn", "n'"];
-	// 小書き母音: ぁぃぅぇぉ（IME的な入力）を許容する
-	// 例: ぃ は "i" だけでなく "xi" / "li" でも入力できる
-	if (token.length === 1 && isVowel(token)) {
-		return [token, `x${token}`, `l${token}`];
-	}
+
+
 	// 小書き拗音: ゃゅょ（必要になることがあるので許容）
 	if (token === "ya" || token === "yu" || token === "yo") {
 		return [token, `x${token}`, `l${token}`];
