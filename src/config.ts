@@ -6,7 +6,7 @@ export const GAME_CONFIG = {
 	INITIAL_TIME: 60,
 
 	/** 寿司の初期移動速度 */
-	INITIAL_SPEED: 0.5,
+	INITIAL_SPEED: 0.4,
 
 	/** 時間経過による速度上昇率 */
 	SPEED_UP_RATE: 0.005,
@@ -14,8 +14,7 @@ export const GAME_CONFIG = {
 	/** 最大移動速度 */
 	MAX_SPEED: 1.25,
 
-	/** 寿司の再出現間隔（ミリ秒） */
-	SPAWN_INTERVAL_BASE: 1000,
+	/** 寿司の再出現間隔（ミリ秒） - ランダム幅 */
 	SPAWN_INTERVAL_RANDOM: 1000,
 
 	/** コンボによるスコア倍率の上昇率 (1 + combo * value) */
@@ -36,14 +35,19 @@ export const GAME_CONFIG = {
 		long: 300,
 	} as Record<"short" | "medium" | "long", number>,
 
-	/** プレートがベルトの上に乗るための高さ（px、下からの距離） */
-	SUSHI_BASE_BOTTOM: 34,
+	/** 各レーンのY座標（下からの距離 px） */
+	LANE_Y_POSITIONS: [18, 149, 280],
 
 	/** 次の寿司が出るまでに必要な最低距離（px） */
-	MIN_SPAWN_DISTANCE: 320,
+	MIN_SPAWN_DISTANCE: 350,
+
+	/** 寿司の再出現間隔（ミリ秒） - 初期値 */
+	SPAWN_INTERVAL_BASE: 1200,
+	/** 寿司の再出現間隔（ミリ秒） - 最小値（後半） */
+	SPAWN_INTERVAL_MIN: 500,
 
 	/** 画面内に表示できる寿司の最大数 */
-	MAX_LIVE_SUSHI: 5,
+	MAX_LIVE_SUSHI: 10,
 
 	/** 寿司の右端出現位置のオフセット */
 	SPAWN_X_OFFSET: 100,

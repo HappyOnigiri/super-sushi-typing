@@ -265,11 +265,15 @@ function loadNextSet() {
 	nextSpawnTime = performance.now();
 }
 
-function spawnSushi(reading: string) {
+let lastSpawnLane = -1;
+
+function spawnSushi(reading: string, laneIndex: number) {
 	const def = SUSHI_MAP.get(reading);
 	if (!def) return;
 
 	const patterns = generateVariants(def.reading);
+	const y =
+		GAME_CONFIG.LANE_Y_POSITIONS[laneIndex] || GAME_CONFIG.LANE_Y_POSITIONS[0];
 
 	const sushi: ActiveSushi = {
 		id: sushiIdCounter++,
@@ -277,7 +281,7 @@ function spawnSushi(reading: string) {
 		patterns,
 		matchIndices: new Array(patterns.length).fill(0),
 		x: laneArea.clientWidth + GAME_CONFIG.SPAWN_X_OFFSET,
-		y: GAME_CONFIG.SUSHI_BASE_BOTTOM,
+		y: y,
 		el: null!,
 		captured: false,
 		capturedAt: 0,
@@ -488,20 +492,58 @@ function gameLoop(timestamp: number) {
 		liveCount < GAME_CONFIG.MAX_LIVE_SUSHI &&
 		timestamp >= nextSpawnTime
 	) {
-		const rightMost = activeSushi
-			.filter((s) => !s.captured)
-			.reduce((max, s) => Math.max(max, s.x), 0);
 		const laneWidth = laneArea.clientWidth || 800;
-		if (
-			rightMost < laneWidth - GAME_CONFIG.MIN_SPAWN_DISTANCE ||
-			liveCount === 0
-		) {
+		const availableLanes: number[] = [];
+
+		// Check each lane for space
+		for (let i = 0; i < GAME_CONFIG.LANE_Y_POSITIONS.length; i++) {
+			const laneY = GAME_CONFIG.LANE_Y_POSITIONS[i];
+			const laneSushis = activeSushi.filter(
+				(s) => !s.captured && Math.abs(s.y - laneY) < 1,
+			);
+
+			if (laneSushis.length === 0) {
+				availableLanes.push(i);
+			} else {
+				const rightMostX = laneSushis.reduce(
+					(max, s) => Math.max(max, s.x),
+					-9999,
+				);
+				if (rightMostX < laneWidth - GAME_CONFIG.MIN_SPAWN_DISTANCE) {
+					availableLanes.push(i);
+				}
+			}
+		}
+
+		if (availableLanes.length > 0) {
+			// Prefer different lane from last spawn
+			let targetLane = -1;
+			const otherLanes = availableLanes.filter((l) => l !== lastSpawnLane);
+
+			if (otherLanes.length > 0) {
+				targetLane = otherLanes[Math.floor(Math.random() * otherLanes.length)];
+			} else {
+				targetLane =
+					availableLanes[Math.floor(Math.random() * availableLanes.length)];
+			}
+
 			const reading = currentSetSushiReadings.shift()!;
-			spawnSushi(reading);
-			nextSpawnTime =
-				timestamp +
-				GAME_CONFIG.SPAWN_INTERVAL_BASE +
-				Math.random() * GAME_CONFIG.SPAWN_INTERVAL_RANDOM;
+			spawnSushi(reading, targetLane);
+			lastSpawnLane = targetLane;
+
+			// Calculate next spawn time based on progress
+			// As time passes, interval gets shorter
+			const progress = Math.min(elapsed / GAME_CONFIG.INITIAL_TIME, 1.0);
+
+			const currentBase =
+				GAME_CONFIG.SPAWN_INTERVAL_BASE -
+				(GAME_CONFIG.SPAWN_INTERVAL_BASE - GAME_CONFIG.SPAWN_INTERVAL_MIN) *
+					progress;
+
+			const currentRandom =
+				GAME_CONFIG.SPAWN_INTERVAL_RANDOM * (1.0 - progress * 0.5);
+
+			nextSpawnTime = timestamp + currentBase + Math.random() * currentRandom;
 		}
 	}
 
@@ -597,6 +639,7 @@ function startGame() {
 	lastKeyTime = 0;
 	lastCaptureTime = 0;
 
+	lastSpawnLane = -1;
 	setRandomTaisho();
 
 	const sushiEls = laneArea.querySelectorAll(".sushi-item, .score-popup");
