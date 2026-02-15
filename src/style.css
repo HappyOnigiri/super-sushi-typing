@@ -846,14 +846,25 @@ body {
     font-size: 1.1rem;
     padding: 0.6em 1.5em;
   }
+
+  /* Compact layout for mobile */
+  #title-screen .rules {
+    margin-bottom: 1.5em;
+  }
+  .title-image-container {
+    margin: 0.5rem 0 1.5rem 0;
+  }
+  #title-screen .start-btn-container {
+    gap: 1rem;
+  }
 }
 
 /* Footer */
 .app-footer {
   width: 100%;
-  position: absolute; /* relative -> absolute */
-  bottom: 0;          /* 最下部に固定 */
-  left: 0;            /* 左端揃え */
+  position: relative;
+  /* bottom: 0; removed to prevent overlap */
+  /* left: 0; removed */
   padding: 1rem 0;    /* 少しパディングを調整 */
   background: rgba(0, 5, 10, 0.9);
   border-top: 1px solid rgba(0, 243, 255, 0.2);
