@@ -137,7 +137,7 @@ random_sushis:
   - name: リードレプリカ鯛
     reading: ri-dorepurikatai
   - name: シャーディングイカ
-    reading: sha-dinguika
+    reading: sha-dhinguika
   - name: バックプレッシャー巻き
     reading: bakkupuressha-maki
   - name: ミドルウェアハマチ
@@ -353,7 +353,7 @@ random_sushis:
   - name: トランスフォーマーサバ
     reading: toransufo-ma-saba
   - name: ディフュージョンウニ
-    reading: difyu-jonuni
+    reading: dhifyu-jonuni
   - name: 強化学習いなり
     reading: kyoukagakushuuinari
 
@@ -381,7 +381,7 @@ random_sushis:
   - name: ぷるぷる杏仁豆腐
     reading: purupuruannindoufu
   - name: 激苦抹茶アイス
-    reading: gekinigamatchaaisu
+    reading: gekinigamacchaaisu
   - name: シュワシュワメロンソーダ
     reading: shuwashuwameronso-da
   - name: ビー玉が取れないラムネ
@@ -447,7 +447,7 @@ random_sushis:
   - name: リモートワーク巻き
     reading: rimo-towa-kumaki
   - name: スタンディングデスクえび
-    reading: sutandingudesukuebi
+    reading: sutandhingudesukuebi
   - name: 集中できないイカ
     reading: shuuchuudekinaiika
   - name: スランプ軍艦
@@ -804,11 +804,11 @@ sushi_groups:
     # 先頭共通: "konsoru"
     sushis:
       - name: コンソールログ巻き
-        reading: konsorurogumaki
+        reading: konso-rurogumaki
       - name: コンソール真っ赤イカ
-        reading: konsorumakkaika
+        reading: konso-rumakkaika
       - name: コンソールだけが友達サバ
-        reading: konsorudakegatomodachisaba
+        reading: konso-rudakegatomodachisaba
 
   - id: dev-head-14
     # 先頭共通: "rimo-to"
@@ -1068,7 +1068,7 @@ sushi_groups:
       - name: ヘビーローテーション巻き
         reading: hebi-ro-te-shonmaki
       - name: スタンディングオベーション巻き
-        reading: sutandinguobe-shonmaki
+        reading: sutandhinguobe-shonmaki
       - name: コミュニケーション巻き
         reading: komyunike-shonmaki
 
@@ -1196,7 +1196,7 @@ sushi_groups:
     # 末尾共通: "ikura"
     sushis:
       - name: ディスラプトイクラ
-        reading: disuraputoikura
+        reading: dhisuraputoikura
       - name: インプットイクラ
         reading: inputtoikura
       - name: アウトプットイクラ
@@ -1276,7 +1276,7 @@ sushi_groups:
     # 末尾共通: "sushi"
     sushis:
       - name: インディー寿司
-        reading: indei-sushi
+        reading: indhi-sushi
       - name: メジャー寿司
         reading: meja-sushi
       - name: アンダーグラウンド寿司
