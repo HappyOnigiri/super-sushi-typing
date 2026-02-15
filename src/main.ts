@@ -101,6 +101,7 @@ let lastKeyTime = 0;
 let animFrameId = 0;
 let gameTimerId = 0;
 let currentTaishoEmoji = "🧑🏻‍🍳";
+let countdownIntervalId = 0;
 
 // DOM helper
 function getElement<T extends HTMLElement>(id: string): T {
@@ -342,15 +343,17 @@ function setTaishoLine(trigger: string) {
 
 // ---------- Input Handler ----------
 
-function handleKeyInput(char: string) {
+function handleKeyInput(char: string, isDebugAutoMatch = false) {
 	if (gameState !== "playing") return;
 
 	lastKeyTime = performance.now();
 	idleTimer = 0;
 
-	inputDisplay.textContent = (inputDisplay.textContent || "") + char;
-	if (inputDisplay.textContent && inputDisplay.textContent.length > 25) {
-		inputDisplay.textContent = inputDisplay.textContent.slice(-25);
+	if (!isDebugAutoMatch) {
+		inputDisplay.textContent = (inputDisplay.textContent || "") + char;
+		if (inputDisplay.textContent && inputDisplay.textContent.length > 25) {
+			inputDisplay.textContent = inputDisplay.textContent.slice(-25);
+		}
 	}
 
 	const capturedThisTick: ActiveSushi[] = [];
@@ -363,9 +366,9 @@ function handleKeyInput(char: string) {
 			const pattern = sushi.patterns[p];
 			const idx = sushi.matchIndices[p];
 
-			if (idx < pattern.length && char === pattern[idx]) {
+			if (isDebugAutoMatch || (idx < pattern.length && char === pattern[idx])) {
 				anyMatch = true;
-				sushi.matchIndices[p] = idx + 1;
+				sushi.matchIndices[p] = isDebugAutoMatch ? idx + 1 : idx + 1;
 
 				if (sushi.matchIndices[p] === pattern.length) {
 					sushi.captured = true;
@@ -381,7 +384,7 @@ function handleKeyInput(char: string) {
 		}
 	}
 
-	if (!anyMatch && activeSushi.length > 0) {
+	if (!isDebugAutoMatch && !anyMatch && activeSushi.length > 0) {
 		inputDisplay.classList.remove("shake");
 		void inputDisplay.offsetWidth; // trigger reflow
 		inputDisplay.classList.add("shake");
@@ -617,14 +620,14 @@ function startCountdown(callback: () => void) {
 	let count = 3;
 	countdownOverlay.textContent = String(count);
 
-	const interval = setInterval(() => {
+	countdownIntervalId = window.setInterval(() => {
 		count--;
 		if (count > 0) {
 			countdownOverlay.textContent = String(count);
 		} else if (count === 0) {
 			countdownOverlay.textContent = "GO!";
 		} else {
-			clearInterval(interval);
+			clearInterval(countdownIntervalId);
 			countdownOverlay.style.display = "none";
 			callback();
 		}
@@ -632,6 +635,12 @@ function startCountdown(callback: () => void) {
 }
 
 function startGame() {
+	// 既存の処理をキャンセル
+	cancelAnimationFrame(animFrameId);
+	clearInterval(gameTimerId);
+	clearInterval(countdownIntervalId);
+	countdownOverlay.style.display = "none";
+
 	score = 0;
 	combo = 0;
 	maxCombo = 0;
@@ -698,6 +707,8 @@ function showResult() {
 	resultScreen.style.display = "flex";
 
 	const rank = getRank(score);
+	const randomComment =
+		rank.taisho[Math.floor(Math.random() * rank.taisho.length)];
 
 	resultScore.textContent = score.toLocaleString();
 	resultPlates.textContent = totalPlates + "皿";
@@ -706,11 +717,16 @@ function showResult() {
 	resultRankEmoji.textContent = rank.emoji;
 	resultRankName.textContent = rank.name;
 	resultRankComment.textContent = `「${rank.name}」の称号を獲得！`;
-	resultTaisho.textContent = `${currentTaishoEmoji} 大将「${rank.taisho}」`;
+	resultTaisho.textContent = `${currentTaishoEmoji} 大将「${randomComment}」`;
 }
 
 function getShareText(): string {
 	const rank = getRank(score);
+	// resultTaisho のテキストから現在のコメントを取得（ランダム性を保持するため）
+	const commentText = resultTaisho.textContent || "";
+	const commentMatch = commentText.match(/「(.*)」/);
+	const currentComment = commentMatch ? commentMatch[1] : rank.taisho[0];
+
 	return `🍣 タイピング回転寿司 量子マグロ亭
 
 ${rank.emoji} ${rank.name}
@@ -719,7 +735,7 @@ ${rank.emoji} ${rank.name}
 最大コンボ: ${maxCombo}
 最大同時取り: ${maxSimultaneous}皿！
 
-${currentTaishoEmoji} 大将「${rank.taisho}」
+${currentTaishoEmoji} 大将「${currentComment}」
 
 #量子マグロ亭`;
 }
@@ -745,6 +761,9 @@ document.addEventListener("keydown", (e) => {
 		if (e.key.length === 1 && /^[a-zA-Z]$/.test(e.key)) {
 			e.preventDefault();
 			handleKeyInput(e.key.toLowerCase());
+		} else if (e.key === "Enter" && import.meta.env.DEV) {
+			e.preventDefault();
+			handleKeyInput("", true);
 		}
 	}
 
@@ -753,7 +772,7 @@ document.addEventListener("keydown", (e) => {
 	}
 
 	if (gameState === "result" && e.key === "Enter") {
-		startGame();
+		// Enter でリトライしないように削除
 	}
 });
 
