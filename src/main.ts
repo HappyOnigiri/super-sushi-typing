@@ -331,7 +331,7 @@ let taishoTimeout = 0;
 function setTaishoLine(trigger: string) {
 	const line = getTaishoLine(trigger);
 	if (!line) return;
-	taishoBubble.textContent = "「" + line + "」";
+	taishoBubble.textContent = line;
 	clearTimeout(taishoTimeout);
 	taishoTimeout = window.setTimeout(() => {}, 2500);
 }
