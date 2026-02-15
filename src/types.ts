@@ -30,5 +30,5 @@ export interface RankDef {
 	minScore: number;
 	name: string;
 	emoji: string;
-	taisho: string;
+	taisho: string[];
 }
