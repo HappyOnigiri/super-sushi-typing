@@ -698,7 +698,7 @@ ${rank.emoji} ${rank.name}
 
 ${currentTaishoEmoji} 大将「${currentComment}」
 
-https://quantum-sushi.vercel.app
+https://quantum-maguro.vercel.app/
 #量子マグロ亭`;
 }
 
