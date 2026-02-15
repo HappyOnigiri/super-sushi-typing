@@ -165,11 +165,19 @@ body {
   color: var(--cyber-pink);
 }
 
+#title-screen .start-btn-container {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
 #title-screen .start-btn {
   font-family: "Orbitron", sans-serif;
-  font-size: 1.8rem;
+  font-size: 1.5rem; /* 少し小さくして並べやすくする */
   font-weight: 700;
-  padding: 0.8em 3em;
+  padding: 0.8em 2em;
   border: 2px solid var(--cyber-pink);
   border-radius: 0;
   background: rgba(255, 0, 255, 0.1);
@@ -208,6 +216,29 @@ body {
 
 #title-screen .start-btn:hover::before {
   left: 100%;
+}
+
+/* Tokujo Button Style (Gold/Red) */
+#title-screen .tokujo-btn {
+  border-color: #ffd700;
+  color: #ffd700;
+  background: rgba(255, 215, 0, 0.1);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+}
+
+#title-screen .tokujo-btn::before {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 215, 0, 0.4),
+    transparent
+  );
+}
+
+#title-screen .tokujo-btn:hover {
+  background: #ffd700;
+  color: #000; /* Gold background looks better with black text */
+  box-shadow: 0 0 40px rgba(255, 215, 0, 0.8);
 }
 
 /* Game Screen */
@@ -559,6 +590,18 @@ body {
   margin-bottom: 0.4em;
   text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
 }
+#result-mode {
+  font-family: "Orbitron", sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--cyber-blue);
+  background: rgba(0, 243, 255, 0.1);
+  padding: 0.2em 1em;
+  border: 1px solid var(--cyber-blue);
+  border-radius: 4px;
+  margin-bottom: 0.5em;
+  text-shadow: 0 0 10px var(--cyber-blue);
+}
 #result-rank-emoji {
   font-size: 5rem;
   margin-bottom: 0.2em;
@@ -627,7 +670,7 @@ body {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
-#retry-btn {
+#top-btn {
   background: linear-gradient(135deg, #ff6b6b, #ffa502);
   color: #fff;
   box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
@@ -901,6 +944,11 @@ body {
   }
   #result-screen h2 {
     font-size: 2rem;
+    margin-bottom: 0.2em;
+  }
+  #result-mode {
+    font-size: 0.9rem;
+    padding: 0.1em 0.8em;
     margin-bottom: 0.2em;
   }
   #result-rank-emoji {

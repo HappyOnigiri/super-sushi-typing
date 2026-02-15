@@ -103,7 +103,12 @@
           > SYSTEM: 1文字打つたびに全ターゲット判定<br />
           > BONUS: 複数同時撃破でスコア増幅
         </div>
-        <button class="start-btn" id="start-btn">START</button>
+        <div class="start-btn-container">
+          <button class="start-btn" id="start-btn">通常 START</button>
+          <button class="start-btn tokujo-btn" id="tokujo-btn">
+            特上 START
+          </button>
+        </div>
       </div>
 
       <!-- Game Screen -->
@@ -137,9 +142,9 @@
         </div>
       </div>
 
-      <!-- Result Screen -->
       <div id="result-screen">
         <h2>おあいそ！</h2>
+        <div id="result-mode"></div>
         <div id="result-rank-emoji"></div>
         <div id="result-rank-name"></div>
         <div id="result-rank-comment"></div>
@@ -164,7 +169,7 @@
         <div id="result-taisho"></div>
         <div>
           <button class="result-btn" id="share-btn">𝕏 で結果をポスト</button>
-          <button class="result-btn" id="retry-btn">🍣 もう一度握る</button>
+          <button class="result-btn" id="top-btn">🍣 トップに戻る</button>
         </div>
       </div>
 

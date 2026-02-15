@@ -1,9 +1,11 @@
-import { GAME_CONFIG } from "./config";
+import { type GameConfig, NORMAL_CONFIG, TOKUJO_CONFIG } from "./config";
 import { RANKS } from "./data/ranks";
 import { RANDOM_SUSHI_DEFS, SUSHI_DEFS, SUSHI_GROUPS } from "./data/sushi";
 import { TAISHO_LINES } from "./data/taisho";
 import { generateVariants } from "./romaji";
 import type { ActiveSushi, RankDef, SushiDef } from "./types";
+
+let currentConfig: GameConfig = NORMAL_CONFIG;
 
 const SUSHI_MAP = new Map<string, SushiDef>();
 for (const d of SUSHI_DEFS) {
@@ -26,7 +28,7 @@ let combo = 0;
 let maxCombo = 0;
 let maxSimultaneous = 0;
 let totalPlates = 0;
-let timeLeft = GAME_CONFIG.INITIAL_TIME;
+let timeLeft = currentConfig.INITIAL_TIME;
 let startTime = 0;
 let sushiIdCounter = 0;
 let activeSushi: ActiveSushi[] = [];
@@ -73,8 +75,10 @@ const resultRankEmoji = getElement("result-rank-emoji");
 const resultRankName = getElement("result-rank-name");
 const resultRankComment = getElement("result-rank-comment");
 const resultTaisho = getElement("result-taisho");
+const resultMode = getElement("result-mode");
 const shareBtn = getElement("share-btn");
-const retryBtn = getElement("retry-btn");
+const topBtn = getElement("top-btn");
+const tokujoBtn = getElement("tokujo-btn");
 
 // ---------- Utility ----------
 
@@ -92,10 +96,10 @@ function getReadingCharCount(reading: string): number {
 }
 
 function getSimultaneousMultiplier(count: number): number {
-	if (count <= 1) return GAME_CONFIG.SIMULTANEOUS_MULTIPLIERS[1];
-	if (count === 2) return GAME_CONFIG.SIMULTANEOUS_MULTIPLIERS[2];
-	if (count === 3) return GAME_CONFIG.SIMULTANEOUS_MULTIPLIERS[3];
-	return GAME_CONFIG.SIMULTANEOUS_MULTIPLIERS[4];
+	if (count <= 1) return currentConfig.SIMULTANEOUS_MULTIPLIERS[1];
+	if (count === 2) return currentConfig.SIMULTANEOUS_MULTIPLIERS[2];
+	if (count === 3) return currentConfig.SIMULTANEOUS_MULTIPLIERS[3];
+	return currentConfig.SIMULTANEOUS_MULTIPLIERS[4];
 }
 
 // ---------- Sushi DOM ----------
@@ -219,14 +223,15 @@ function spawnSushi(reading: string, laneIndex: number) {
 
 	const patterns = generateVariants(def.reading);
 	const y =
-		GAME_CONFIG.LANE_Y_POSITIONS[laneIndex] || GAME_CONFIG.LANE_Y_POSITIONS[0];
+		currentConfig.LANE_Y_POSITIONS[laneIndex] ||
+		currentConfig.LANE_Y_POSITIONS[0];
 
 	const sushi: ActiveSushi = {
 		id: sushiIdCounter++,
 		def,
 		patterns,
 		matchIndices: new Array(patterns.length).fill(0),
-		x: laneArea.clientWidth + GAME_CONFIG.SPAWN_X_OFFSET,
+		x: laneArea.clientWidth + currentConfig.SPAWN_X_OFFSET,
 		y: y,
 		el: null!,
 		captured: false,
@@ -271,9 +276,11 @@ function showComboBurst(text: string) {
 // ---------- Taisho ----------
 
 function setRandomTaisho() {
-	const emojis = GAME_CONFIG.TAISHO_EMOJIS;
+	const emojis = currentConfig.TAISHO_EMOJIS;
 	currentTaishoEmoji = emojis[Math.floor(Math.random() * emojis.length)];
 	taishoEmoji.textContent = currentTaishoEmoji;
+	taishoBubble.textContent = getTaishoLine("start") || "いらっしゃい！何でも握るよ！";
+	clearTimeout(taishoTimeout);
 }
 
 let taishoTimeout = 0;
@@ -347,8 +354,8 @@ function handleKeyInput(char: string, isDebugAutoMatch = false) {
 			totalPlates++;
 
 			const basePoints =
-				GAME_CONFIG.BASE_POINTS + getReadingCharCount(sushi.def.reading);
-			const comboMultiplier = 1 + combo * GAME_CONFIG.COMBO_MULTIPLIER_RATE;
+				currentConfig.BASE_POINTS + getReadingCharCount(sushi.def.reading);
+			const comboMultiplier = 1 + combo * currentConfig.COMBO_MULTIPLIER_RATE;
 			const points = Math.round(basePoints * comboMultiplier * simulMultiplier);
 			score += points;
 
@@ -380,7 +387,7 @@ function handleKeyInput(char: string, isDebugAutoMatch = false) {
 			showComboBurst("✨ 2貫同時！");
 		} else {
 			const charCount = getReadingCharCount(capturedThisTick[0].def.reading);
-			if (charCount >= GAME_CONFIG.LONG_READING_THRESHOLD) {
+			if (charCount >= currentConfig.LONG_READING_THRESHOLD) {
 				setTaishoLine("long_complete");
 			} else {
 				setTaishoLine("capture1");
@@ -412,8 +419,8 @@ function gameLoop(timestamp: number) {
 	const elapsed = (timestamp - startTime) / 1000;
 	maybeStartNextGroup(elapsed);
 	const speed = Math.min(
-		GAME_CONFIG.INITIAL_SPEED + elapsed * GAME_CONFIG.SPEED_UP_RATE,
-		GAME_CONFIG.MAX_SPEED,
+		currentConfig.INITIAL_SPEED + elapsed * currentConfig.SPEED_UP_RATE,
+		currentConfig.MAX_SPEED,
 	);
 
 	for (const sushi of activeSushi) {
@@ -421,7 +428,7 @@ function gameLoop(timestamp: number) {
 		sushi.x -= speed;
 		sushi.el.style.left = sushi.x + "px";
 
-		if (sushi.x < GAME_CONFIG.DESPAWN_X) {
+		if (sushi.x < currentConfig.DESPAWN_X) {
 			sushi.el.remove();
 			combo = 0;
 			comboValue.textContent = "0";
@@ -431,27 +438,27 @@ function gameLoop(timestamp: number) {
 
 	activeSushi = activeSushi.filter((s) => {
 		if (s.captured) return true;
-		if (s.x < GAME_CONFIG.DESPAWN_X) return false;
+		if (s.x < currentConfig.DESPAWN_X) return false;
 		return true;
 	});
 
 	const liveCount = activeSushi.filter((s) => !s.captured).length;
 	// 残りの寿司が少ない場合（閾値以下）は、出現時間を待たずに即座に出現させる
 	const shouldSpawnImmediately =
-		liveCount <= GAME_CONFIG.IMMEDIATE_SPAWN_THRESHOLD;
+		liveCount <= currentConfig.IMMEDIATE_SPAWN_THRESHOLD;
 
 	if (
 		timeLeft > 0 &&
 		(pendingGroupReadings.length > 0 || remainingRandomReadings.length > 0) &&
-		liveCount < GAME_CONFIG.MAX_LIVE_SUSHI &&
+		liveCount < currentConfig.MAX_LIVE_SUSHI &&
 		(timestamp >= nextSpawnTime || shouldSpawnImmediately)
 	) {
 		const laneWidth = laneArea.clientWidth || 800;
 		const availableLanes: number[] = [];
 
 		// Check each lane for space
-		for (let i = 0; i < GAME_CONFIG.LANE_Y_POSITIONS.length; i++) {
-			const laneY = GAME_CONFIG.LANE_Y_POSITIONS[i];
+		for (let i = 0; i < currentConfig.LANE_Y_POSITIONS.length; i++) {
+			const laneY = currentConfig.LANE_Y_POSITIONS[i];
 			const laneSushis = activeSushi.filter(
 				(s) => !s.captured && Math.abs(s.y - laneY) < 1,
 			);
@@ -463,7 +470,7 @@ function gameLoop(timestamp: number) {
 					(max, s) => Math.max(max, s.x),
 					-9999,
 				);
-				if (rightMostX < laneWidth - GAME_CONFIG.MIN_SPAWN_DISTANCE) {
+				if (rightMostX < laneWidth - currentConfig.MIN_SPAWN_DISTANCE) {
 					availableLanes.push(i);
 				}
 			}
@@ -489,21 +496,21 @@ function gameLoop(timestamp: number) {
 
 			// Calculate next spawn time based on progress
 			// As time passes, interval gets shorter
-			const progress = Math.min(elapsed / GAME_CONFIG.INITIAL_TIME, 1.0);
+			const progress = Math.min(elapsed / currentConfig.INITIAL_TIME, 1.0);
 
 			const currentBase =
-				GAME_CONFIG.SPAWN_INTERVAL_BASE -
-				(GAME_CONFIG.SPAWN_INTERVAL_BASE - GAME_CONFIG.SPAWN_INTERVAL_MIN) *
+				currentConfig.SPAWN_INTERVAL_BASE -
+				(currentConfig.SPAWN_INTERVAL_BASE - currentConfig.SPAWN_INTERVAL_MIN) *
 					progress;
 
 			const currentRandom =
-				GAME_CONFIG.SPAWN_INTERVAL_RANDOM * (1.0 - progress * 0.5);
+				currentConfig.SPAWN_INTERVAL_RANDOM * (1.0 - progress * 0.5);
 
 			nextSpawnTime = timestamp + currentBase + Math.random() * currentRandom;
 
 			// 即時出現モードの場合は、次の出現までの時間を短縮する
 			if (shouldSpawnImmediately) {
-				nextSpawnTime = timestamp + GAME_CONFIG.IMMEDIATE_SPAWN_DELAY;
+				nextSpawnTime = timestamp + currentConfig.IMMEDIATE_SPAWN_DELAY;
 			}
 		}
 	}
@@ -547,8 +554,8 @@ function gameLoop(timestamp: number) {
 // ---------- Timer ----------
 
 function startTimer() {
-	timeLeft = GAME_CONFIG.INITIAL_TIME;
-	timeValue.textContent = String(GAME_CONFIG.INITIAL_TIME);
+	timeLeft = currentConfig.INITIAL_TIME;
+	timeValue.textContent = String(currentConfig.INITIAL_TIME);
 
 	gameTimerId = window.setInterval(() => {
 		if (gameState !== "playing") return;
@@ -592,7 +599,8 @@ function startCountdown(callback: () => void) {
 	}, 700);
 }
 
-function startGame() {
+function startGame(config: GameConfig = NORMAL_CONFIG) {
+	currentConfig = config;
 	// 既存の処理をキャンセル
 	cancelAnimationFrame(animFrameId);
 	clearInterval(gameTimerId);
@@ -604,7 +612,7 @@ function startGame() {
 	maxCombo = 0;
 	maxSimultaneous = 0;
 	totalPlates = 0;
-	timeLeft = GAME_CONFIG.INITIAL_TIME;
+	timeLeft = currentConfig.INITIAL_TIME;
 	sushiIdCounter = 0;
 	activeSushi = [];
 	last10sTriggered = false;
@@ -624,7 +632,7 @@ function startGame() {
 
 	scoreValue.textContent = "0";
 	comboValue.textContent = "0";
-	timeValue.textContent = String(GAME_CONFIG.INITIAL_TIME);
+	timeValue.textContent = String(currentConfig.INITIAL_TIME);
 	inputDisplay.textContent = "";
 	inputHint.textContent = "キーボードで寿司を打とう";
 
@@ -679,6 +687,17 @@ function showResult() {
 	resultRankName.textContent = rank.name;
 	resultRankComment.textContent = `「${rank.name}」の称号を獲得！`;
 	resultTaisho.textContent = `${currentTaishoEmoji} 大将「${randomComment}」`;
+	resultMode.textContent = `${currentConfig.MODE_NAME}モード`;
+
+	if (currentConfig.MODE_NAME === "特上") {
+		resultMode.style.borderColor = "#ffd700";
+		resultMode.style.color = "#ffd700";
+		resultMode.style.boxShadow = "0 0 10px rgba(255, 215, 0, 0.3)";
+	} else {
+		resultMode.style.borderColor = "var(--cyber-blue)";
+		resultMode.style.color = "var(--cyber-blue)";
+		resultMode.style.boxShadow = "0 0 10px rgba(0, 243, 255, 0.2)";
+	}
 }
 
 function getShareText(): string {
@@ -689,6 +708,7 @@ function getShareText(): string {
 	const currentComment = commentMatch ? commentMatch[1] : rank.taisho[0];
 
 	return `🍣 タイピング回転寿司 量子マグロ亭
+【${currentConfig.MODE_NAME}モード】
 
 ${rank.emoji} ${rank.name}
 スコア: ${score.toLocaleString()}
@@ -705,11 +725,20 @@ https://quantum-maguro.vercel.app/
 // ---------- Event Listeners ----------
 
 startBtn.addEventListener("click", () => {
-	startGame();
+	startGame(NORMAL_CONFIG);
 });
 
-retryBtn.addEventListener("click", () => {
-	startGame();
+tokujoBtn.addEventListener("click", () => {
+	startGame(TOKUJO_CONFIG);
+});
+
+topBtn.addEventListener("click", () => {
+	gameState = "title";
+	titleScreen.style.display = "flex";
+	gameScreen.style.display = "none";
+	resultScreen.style.display = "none";
+	appFooter?.classList.remove("hidden");
+	setRandomTaisho();
 });
 
 shareBtn.addEventListener("click", () => {
@@ -730,7 +759,7 @@ document.addEventListener("keydown", (e) => {
 	}
 
 	if (gameState === "title" && e.key === "Enter") {
-		startGame();
+		startGame(NORMAL_CONFIG);
 	}
 
 	if (gameState === "result" && e.key === "Enter") {
@@ -748,7 +777,6 @@ document.addEventListener("keydown", (e) => {
 
 gameState = "title";
 titleScreen.style.display = "flex";
-gameScreen.style.display = "none";
 gameScreen.style.display = "none";
 resultScreen.style.display = "none";
 appFooter?.classList.remove("hidden");
