@@ -122,7 +122,6 @@ const inputHint = getElement("input-hint");
 const taishoBubble = getElement("taisho-bubble");
 const countdownOverlay = getElement("countdown-overlay");
 const comboBurst = getElement("combo-burst");
-const shareToast = getElement("share-toast");
 
 // Result refs
 const resultScore = getElement("result-score");
@@ -164,6 +163,7 @@ function createSushiElement(sushi: ActiveSushi): HTMLElement {
 	const el = document.createElement("div");
 	el.className = "sushi-item";
 	el.dataset.sushiId = String(sushi.id);
+	el.style.bottom = sushi.y + "px";
 
 	const nameEl = document.createElement("div");
 	nameEl.className = "sushi-name";
@@ -268,12 +268,14 @@ function spawnSushi(reading: string) {
 	if (!def) return;
 
 	const patterns = generateVariants(def.reading);
+
 	const sushi: ActiveSushi = {
 		id: sushiIdCounter++,
 		def,
 		patterns,
 		matchIndices: new Array(patterns.length).fill(0),
 		x: laneArea.clientWidth + GAME_CONFIG.SPAWN_X_OFFSET,
+		y: GAME_CONFIG.SUSHI_BASE_BOTTOM,
 		el: null!,
 		captured: false,
 		capturedAt: 0,
@@ -482,7 +484,10 @@ function gameLoop(timestamp: number) {
 			.filter((s) => !s.captured)
 			.reduce((max, s) => Math.max(max, s.x), 0);
 		const laneWidth = laneArea.clientWidth || 800;
-		if (rightMost < laneWidth - 120 || liveCount === 0) {
+		if (
+			rightMost < laneWidth - GAME_CONFIG.MIN_SPAWN_DISTANCE ||
+			liveCount === 0
+		) {
 			const reading = currentSetSushiReadings.shift()!;
 			spawnSushi(reading);
 			nextSpawnTime =
@@ -670,22 +675,8 @@ retryBtn.addEventListener("click", () => {
 
 shareBtn.addEventListener("click", () => {
 	const text = getShareText();
-	navigator.clipboard
-		.writeText(text)
-		.then(() => {
-			shareToast.classList.add("show");
-			setTimeout(() => shareToast.classList.remove("show"), 2000);
-		})
-		.catch(() => {
-			const ta = document.createElement("textarea");
-			ta.value = text;
-			document.body.appendChild(ta);
-			ta.select();
-			document.execCommand("copy");
-			ta.remove();
-			shareToast.classList.add("show");
-			setTimeout(() => shareToast.classList.remove("show"), 2000);
-		});
+	const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+	window.open(url, "_blank", "noopener,noreferrer");
 });
 
 document.addEventListener("keydown", (e) => {

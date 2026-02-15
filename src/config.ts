@@ -36,12 +36,18 @@ export const GAME_CONFIG = {
 		long: 300,
 	} as Record<"short" | "medium" | "long", number>,
 
+	/** プレートがベルトの上に乗るための高さ（px、下からの距離） */
+	SUSHI_BASE_BOTTOM: 50,
+
+	/** 次の寿司が出るまでに必要な最低距離（px） */
+	MIN_SPAWN_DISTANCE: 400,
+
 	/** 画面内に表示できる寿司の最大数 */
-	MAX_LIVE_SUSHI: 6,
+	MAX_LIVE_SUSHI: 5,
 
 	/** 寿司の右端出現位置のオフセット */
-	SPAWN_X_OFFSET: 50,
+	SPAWN_X_OFFSET: 100,
 
 	/** 寿司が画面外とみなされるX座標（左端） */
-	DESPAWN_X: -150,
+	DESPAWN_X: -200,
 };

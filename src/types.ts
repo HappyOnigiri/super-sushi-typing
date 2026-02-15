@@ -15,6 +15,7 @@ export interface ActiveSushi {
 	patterns: string[];
 	matchIndices: number[];
 	x: number;
+	y: number;
 	el: HTMLElement;
 	captured: boolean;
 	capturedAt: number;

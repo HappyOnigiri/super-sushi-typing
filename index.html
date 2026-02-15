@@ -28,13 +28,17 @@
       }
       #app {
         width: 100%;
+        max-width: 1000px;
         height: 100vh;
+        margin: 0 auto;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         position: relative;
         overflow: hidden;
+        background: rgba(0, 0, 0, 0.4);
+        box-shadow: 0 0 100px rgba(0, 0, 0, 0.5);
       }
 
       /* Title Screen */
@@ -48,30 +52,30 @@
         animation: fadeIn 0.6s ease;
       }
       #title-screen h1 {
-        font-size: 3rem;
+        font-size: 3.5rem;
         font-weight: 900;
         margin-bottom: 0.2em;
         text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
       }
       #title-screen .subtitle {
-        font-size: 1.1rem;
+        font-size: 1.25rem;
         color: #aaa;
         margin-bottom: 2em;
       }
       #title-screen .rules {
-        font-size: 0.95rem;
+        font-size: 1.1rem;
         color: #ccc;
         line-height: 2;
         margin-bottom: 2em;
         background: rgba(255, 255, 255, 0.05);
-        padding: 1em 2em;
+        padding: 1.2em 2.5em;
         border-radius: 12px;
       }
       #title-screen .start-btn {
         font-family: "M PLUS Rounded 1c", sans-serif;
-        font-size: 1.4rem;
+        font-size: 1.6rem;
         font-weight: 700;
-        padding: 0.7em 2.5em;
+        padding: 0.8em 3em;
         border: none;
         border-radius: 50px;
         background: linear-gradient(135deg, #ff6b6b, #ffa502);
@@ -104,7 +108,7 @@
         align-items: center;
         justify-content: center;
         gap: 3em;
-        font-size: 1.2rem;
+        font-size: 1.4rem;
         font-weight: 700;
         background: rgba(0, 0, 0, 0.3);
         border-bottom: 2px solid rgba(255, 215, 0, 0.2);
@@ -114,15 +118,15 @@
       .header-item {
         display: flex;
         align-items: center;
-        gap: 0.4em;
+        gap: 0.6em;
       }
       .header-label {
         color: #aaa;
-        font-size: 0.85rem;
+        font-size: 0.95rem;
       }
       .header-value {
         color: #ffd700;
-        font-size: 1.4rem;
+        font-size: 1.8rem;
       }
       #time-value {
         color: #ff6b6b;
@@ -134,36 +138,44 @@
       /* Lane Area */
       #lane-area {
         height: 40%;
-        min-height: 200px;
+        min-height: 250px;
         position: relative;
         overflow: hidden;
         flex-shrink: 0;
+        width: 100%;
+        background: linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0.02) 0%,
+          transparent 20%,
+          transparent 80%,
+          rgba(0, 0, 0, 0.2) 100%
+        );
       }
       #belt {
         position: absolute;
-        bottom: 20px;
+        bottom: 30px;
         left: 0;
         right: 0;
-        height: 14px;
+        height: 20px;
         background: repeating-linear-gradient(
           90deg,
-          #555 0px,
-          #555 20px,
-          #666 20px,
-          #666 40px
+          #333 0px,
+          #333 30px,
+          #444 30px,
+          #444 60px
         );
-        border-radius: 7px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6);
       }
       #belt::before {
         content: "";
         position: absolute;
-        top: -3px;
+        top: -4px;
         left: 0;
         right: 0;
-        bottom: -3px;
-        border-radius: 10px;
-        border: 2px solid #777;
+        bottom: -4px;
+        border-radius: 12px;
+        border: 3px solid #555;
       }
 
       /* Sushi Item */
@@ -178,48 +190,55 @@
         z-index: 2;
       }
       .sushi-name {
-        font-size: 0.85rem;
-        font-weight: 700;
+        font-size: 1.25rem;
+        font-weight: 900;
         color: #fff;
-        margin-bottom: 2px;
+        margin-bottom: 4px;
         white-space: nowrap;
-        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+        text-shadow:
+          0 2px 4px rgba(0, 0, 0, 1),
+          0 0 10px rgba(0, 0, 0, 0.8);
       }
       .sushi-reading {
         font-family: "Fira Code", monospace;
-        font-size: 0.8rem;
+        font-size: 1.1rem;
+        font-weight: 700;
         letter-spacing: 1px;
-        margin-bottom: 4px;
+        margin-bottom: 6px;
         white-space: nowrap;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 2px 8px;
+        border-radius: 6px;
       }
       .sushi-reading .matched {
         color: #ffd700;
-        font-weight: 700;
+        font-weight: 900;
       }
       .sushi-reading .unmatched {
-        color: #888;
+        color: #ccc;
       }
       .sushi-emoji {
-        font-size: 2.2rem;
+        font-size: 3rem;
         filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
         transition:
           transform 0.15s,
           filter 0.15s;
+        margin-bottom: -5px;
       }
       .sushi-plate {
-        width: 60px;
-        height: 12px;
-        background: radial-gradient(ellipse, #ddd, #aaa);
+        width: 80px;
+        height: 16px;
+        background: radial-gradient(ellipse, #eee, #aaa);
         border-radius: 50%;
         margin-top: -4px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
       }
       .sushi-item.glowing .sushi-emoji {
-        filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.7));
+        filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.8));
       }
       .sushi-item.almost .sushi-emoji {
-        filter: drop-shadow(0 0 20px rgba(255, 215, 0, 1));
-        transform: scale(1.15);
+        filter: drop-shadow(0 0 25px rgba(255, 215, 0, 1));
+        transform: scale(1.2);
       }
       .sushi-item.captured {
         animation: sushiCapture 0.5s ease forwards;
@@ -246,21 +265,22 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 0.8em;
+        gap: 1em;
         flex-shrink: 0;
       }
       #input-display {
         font-family: "Fira Code", monospace;
-        font-size: 2rem;
-        font-weight: 700;
+        font-size: 3rem;
+        font-weight: 900;
         color: #ffd700;
-        min-height: 2.5rem;
-        letter-spacing: 3px;
-        text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+        min-height: 3.5rem;
+        letter-spacing: 4px;
+        text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
       }
       #input-hint {
-        font-size: 0.9rem;
-        color: #888;
+        font-size: 1.1rem;
+        color: #aaa;
+        font-weight: 700;
       }
 
       /* Score Popup */
@@ -296,14 +316,25 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 1em;
         background: rgba(0, 0, 0, 0.2);
         border-top: 2px solid rgba(255, 255, 255, 0.05);
         flex-shrink: 0;
-        padding: 0 1em;
+        padding: 0 2em;
+        width: 100%;
+      }
+      .taisho-container {
+        display: flex;
+        align-items: center;
+        gap: 1.5em;
+        width: 100%;
+        max-width: 700px; /* 固定幅の目安 */
+        justify-content: flex-start; /* 左端（大将の位置）を固定 */
       }
       #taisho-emoji {
-        font-size: 3.5rem;
+        font-size: 4.5rem;
+        flex-shrink: 0;
+        width: 100px; /* 大将の専有幅を固定 */
+        text-align: center;
         animation: taishoIdle 3s ease-in-out infinite;
       }
       @keyframes taishoIdle {
@@ -312,26 +343,32 @@
           transform: translateY(0);
         }
         50% {
-          transform: translateY(-5px);
+          transform: translateY(-8px);
         }
       }
       #taisho-bubble {
         background: rgba(255, 255, 255, 0.1);
-        padding: 0.8em 1.5em;
-        border-radius: 20px;
-        font-size: 1.1rem;
-        max-width: 400px;
+        padding: 1rem 2rem;
+        border-radius: 24px;
+        font-size: 1.3rem;
+        font-weight: 700;
+        min-height: 4.5rem;
+        display: flex;
+        align-items: center;
+        flex-grow: 1; /* 残りのスペースを埋める */
+        max-width: 550px;
         position: relative;
         border: 1px solid rgba(255, 255, 255, 0.1);
         transition: opacity 0.2s;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
       }
       #taisho-bubble::before {
         content: "";
         position: absolute;
-        left: -12px;
+        left: -16px;
         top: 50%;
         transform: translateY(-50%);
-        border: 6px solid transparent;
+        border: 8px solid transparent;
         border-right-color: rgba(255, 255, 255, 0.1);
       }
 
@@ -348,72 +385,78 @@
         gap: 0.5em;
       }
       #result-screen h2 {
-        font-size: 2.5rem;
+        font-size: 3.5rem;
         font-weight: 900;
-        margin-bottom: 0.3em;
+        margin-bottom: 0.4em;
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
       }
       #result-rank-emoji {
-        font-size: 3rem;
+        font-size: 5rem;
+        margin-bottom: 0.2em;
       }
       #result-rank-name {
-        font-size: 1.5rem;
-        font-weight: 700;
+        font-size: 2.5rem;
+        font-weight: 900;
         color: #ffd700;
+        margin-bottom: 0.1em;
       }
       #result-rank-comment {
-        font-size: 0.95rem;
+        font-size: 1.2rem;
         color: #aaa;
-        margin-bottom: 0.8em;
+        margin-bottom: 1.5em;
       }
       .result-stats {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 0.8em;
-        margin: 0.5em 0;
+        gap: 1.2em;
+        margin: 1em 0;
       }
       .result-stat {
         background: rgba(255, 255, 255, 0.07);
-        border-radius: 14px;
-        padding: 0.8em 1.5em;
-        min-width: 140px;
+        border-radius: 18px;
+        padding: 1.2em 2em;
+        min-width: 200px;
       }
       .result-stat-label {
-        font-size: 0.8rem;
+        font-size: 1rem;
         color: #aaa;
+        margin-bottom: 0.3em;
       }
       .result-stat-value {
-        font-size: 1.6rem;
+        font-size: 2.2rem;
         font-weight: 900;
         color: #ffd700;
       }
       #result-taisho {
-        font-size: 1rem;
+        font-size: 1.3rem;
         color: #ccc;
-        margin: 0.6em 0;
+        margin: 1.25em 0;
         background: rgba(255, 255, 255, 0.05);
-        padding: 0.6em 1.2em;
-        border-radius: 12px;
+        padding: 1.2em 2.5em;
+        border-radius: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
       }
       .result-btn {
         font-family: "M PLUS Rounded 1c", sans-serif;
-        font-size: 1.1rem;
+        font-size: 1.4rem;
         font-weight: 700;
-        padding: 0.6em 2em;
+        padding: 0.8em 2.5em;
         border: none;
         border-radius: 50px;
         cursor: pointer;
         transition:
           transform 0.15s,
           box-shadow 0.15s;
-        margin: 0.3em;
+        margin: 0.5em;
       }
       .result-btn:hover {
         transform: scale(1.05);
       }
       #share-btn {
-        background: linear-gradient(135deg, #1da1f2, #0984e3);
+        background: #000;
         color: #fff;
-        box-shadow: 0 4px 15px rgba(29, 161, 242, 0.4);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.2);
       }
       #retry-btn {
         background: linear-gradient(135deg, #ff6b6b, #ffa502);
@@ -422,17 +465,19 @@
       }
       #share-toast {
         position: fixed;
-        bottom: 30px;
+        bottom: 50px;
         left: 50%;
         transform: translateX(-50%);
-        background: rgba(0, 0, 0, 0.85);
+        background: rgba(0, 0, 0, 0.9);
         color: #7bed9f;
-        padding: 0.6em 1.5em;
-        border-radius: 30px;
-        font-size: 0.95rem;
+        padding: 1em 2em;
+        border-radius: 40px;
+        font-size: 1.1rem;
+        font-weight: 700;
         opacity: 0;
         transition: opacity 0.3s;
         z-index: 100;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
       }
       #share-toast.show {
         opacity: 1;
@@ -589,8 +634,10 @@
           <div id="input-hint">キーボードで寿司を打とう</div>
         </div>
         <div id="taisho-area">
-          <div id="taisho-emoji">👨‍🍳</div>
-          <div id="taisho-bubble">いらっしゃい！何でも握るよ！</div>
+          <div class="taisho-container">
+            <div id="taisho-emoji">👨‍🍳</div>
+            <div id="taisho-bubble">いらっしゃい！何でも握るよ！</div>
+          </div>
         </div>
       </div>
 
@@ -620,14 +667,13 @@
         </div>
         <div id="result-taisho"></div>
         <div>
-          <button class="result-btn" id="share-btn">📱 結果をシェア</button>
+          <button class="result-btn" id="share-btn">𝕏 で結果をポスト</button>
           <button class="result-btn" id="retry-btn">🍣 もう一度握る</button>
         </div>
       </div>
 
       <div id="countdown-overlay"></div>
       <div id="combo-burst"></div>
-      <div id="share-toast">📋 クリップボードにコピーしました！</div>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
