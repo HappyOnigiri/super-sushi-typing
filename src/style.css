@@ -240,58 +240,26 @@ body {
   overflow: hidden;
   flex-shrink: 0;
   width: 100%;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 243, 255, 0.05) 0%,
-    transparent 20%,
-    transparent 80%,
-    rgba(0, 0, 0, 0.4) 100%
-  );
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(
+      to bottom,
+      rgba(0, 10, 30, 0.2) 0%,
+      transparent 50%,
+      rgba(0, 0, 0, 0.5) 100%
+    );
+  background-size: 100px 100px, 150px 150px, 80px 80px, 100% 100%;
   border-top: 1px solid rgba(0, 243, 255, 0.1);
   border-bottom: 1px solid rgba(0, 243, 255, 0.1);
 }
 #lane-area::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image:
-    linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
-  background-size: 60px 60px;
-  pointer-events: none;
+  content: none;
 }
 
 #belt {
-  position: absolute;
-  bottom: 30px;
-  left: 0;
-  right: 0;
-  height: 20px;
-  background: repeating-linear-gradient(
-    90deg,
-    #1a1a2e 0px,
-    #1a1a2e 30px,
-    #16213e 30px,
-    #16213e 60px
-  );
-  border-radius: 2px;
-  box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
-  border-top: 2px solid var(--cyber-blue);
-  border-bottom: 2px solid var(--cyber-blue);
-}
-#belt::before {
-  content: "";
-  position: absolute;
-  top: -4px;
-  left: 0;
-  right: 0;
-  bottom: -4px;
-  border: none;
-  box-shadow: 0 0 10px var(--cyber-blue);
-  opacity: 0.5;
+  display: none;
 }
 
 /* Sushi Item */
@@ -304,7 +272,18 @@ body {
   transition: opacity 0.1s;
   pointer-events: none;
   z-index: 2;
+  animation: float 4s ease-in-out infinite;
 }
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
 .sushi-name {
   font-family: "M PLUS Rounded 1c", sans-serif;
   font-size: 1.25rem;
@@ -349,11 +328,25 @@ body {
 .sushi-plate {
   width: 80px;
   height: 16px;
-  background: radial-gradient(ellipse, #333, #111);
-  border: 1px solid var(--cyber-blue);
+  background: rgba(0, 243, 255, 0.1);
+  border: 1px solid rgba(0, 243, 255, 0.4);
   border-radius: 50%;
   margin-top: -4px;
-  box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+  box-shadow:
+    0 0 10px rgba(0, 243, 255, 0.2),
+    inset 0 0 10px rgba(0, 243, 255, 0.1);
+  position: relative;
+}
+.sushi-plate::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  height: 60%;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 243, 255, 0.2);
 }
 .sushi-item.glowing .sushi-emoji {
   filter: drop-shadow(0 0 15px var(--cyber-pink));

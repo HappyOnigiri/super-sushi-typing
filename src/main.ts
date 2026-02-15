@@ -712,22 +712,6 @@ document.addEventListener("keydown", (e) => {
 	}
 });
 
-// ---------- Belt Animation ----------
-
-(function animateBelt() {
-	const belt = document.getElementById("belt");
-	if (!belt) return;
-	let offset = 0;
-	function tick() {
-		offset -= 0.5;
-		if (belt) {
-			belt.style.backgroundPositionX = offset + "px";
-		}
-		requestAnimationFrame(tick);
-	}
-	requestAnimationFrame(tick);
-})();
-
 // ---------- Initial State ----------
 
 gameState = "title";
