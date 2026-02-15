@@ -1,8 +1,8 @@
 import { GAME_CONFIG } from "./config";
 import { RANKS } from "./data/ranks";
-import { SUSHI_DEFS, SUSHI_SETS } from "./data/sushi";
+import { SUSHI_DEFS } from "./data/sushi";
 import { TAISHO_LINES } from "./data/taisho";
-import type { ActiveSushi, RankDef, SushiDef, SushiSet } from "./types";
+import type { ActiveSushi, RankDef, SushiDef } from "./types";
 
 const SUSHI_MAP = new Map<string, SushiDef>();
 for (const d of SUSHI_DEFS) {
@@ -90,9 +90,6 @@ let timeLeft = GAME_CONFIG.INITIAL_TIME;
 let startTime = 0;
 let sushiIdCounter = 0;
 let activeSushi: ActiveSushi[] = [];
-let setQueue: SushiSet[] = [];
-let currentSetSushiReadings: string[] = [];
-let currentSetIndex = 0;
 let nextSpawnTime = 0;
 let lastCaptureTime = 0;
 let last10sTriggered = false;
@@ -139,15 +136,6 @@ const shareBtn = getElement("share-btn");
 const retryBtn = getElement("retry-btn");
 
 // ---------- Utility ----------
-
-function shuffle<T>(arr: T[]): T[] {
-	const a = [...arr];
-	for (let i = a.length - 1; i > 0; i--) {
-		const j = Math.floor(Math.random() * (i + 1));
-		[a[i], a[j]] = [a[j], a[i]];
-	}
-	return a;
-}
 
 function getReadingCharCount(reading: string): number {
 	return reading.length;
@@ -232,38 +220,11 @@ function updateSushiVisuals(sushi: ActiveSushi) {
 	if (readingEl) updateReadingDisplay(readingEl, sushi);
 }
 
-// ---------- Set / Spawn Logic ----------
+// ---------- Spawn Logic ----------
 
-function buildSetQueue(): SushiSet[] {
-	const typeB = SUSHI_SETS.filter((s) => s.type === "B");
-	const typeAC = SUSHI_SETS.filter((s) => s.type === "A" || s.type === "C");
-	const typeD = SUSHI_SETS.filter((s) => s.type === "D");
-
-	const shuffledB = shuffle(typeB);
-	const shuffledAC = shuffle(typeAC);
-	const shuffledD = shuffle(typeD);
-
-	const result: SushiSet[] = [];
-	result.push(...shuffledB.slice(0, 2));
-	const remaining = [...shuffledAC, ...shuffledB.slice(2)];
-	result.push(...shuffle(remaining));
-	result.push(...shuffledD);
-
-	return result;
-}
-
-function loadNextSet() {
-	if (setQueue.length === 0) {
-		setQueue = buildSetQueue();
-		currentSetIndex = 0;
-	}
-	if (currentSetIndex >= setQueue.length) {
-		setQueue = buildSetQueue();
-		currentSetIndex = 0;
-	}
-	const set = setQueue[currentSetIndex++];
-	currentSetSushiReadings = [...set.readings];
-	nextSpawnTime = performance.now();
+function pickRandomReading(): string {
+	const idx = Math.floor(Math.random() * SUSHI_DEFS.length);
+	return SUSHI_DEFS[idx]?.reading ?? SUSHI_DEFS[0]?.reading ?? "";
 }
 
 let lastSpawnLane = -1;
@@ -496,7 +457,6 @@ function gameLoop(timestamp: number) {
 
 	if (
 		timeLeft > 0 &&
-		currentSetSushiReadings.length > 0 &&
 		liveCount < GAME_CONFIG.MAX_LIVE_SUSHI &&
 		(timestamp >= nextSpawnTime || shouldSpawnImmediately)
 	) {
@@ -535,7 +495,7 @@ function gameLoop(timestamp: number) {
 					availableLanes[Math.floor(Math.random() * availableLanes.length)];
 			}
 
-			const reading = currentSetSushiReadings.shift()!;
+			const reading = pickRandomReading();
 			spawnSushi(reading, targetLane);
 			lastSpawnLane = targetLane;
 
@@ -558,10 +518,6 @@ function gameLoop(timestamp: number) {
 				nextSpawnTime = timestamp + GAME_CONFIG.IMMEDIATE_SPAWN_DELAY;
 			}
 		}
-	}
-
-	if (timeLeft > 0 && currentSetSushiReadings.length === 0 && liveCount <= 1) {
-		loadNextSet();
 	}
 
 	if (timeLeft <= 0 && activeSushi.length === 0) {
@@ -651,8 +607,6 @@ function startGame() {
 	timeLeft = GAME_CONFIG.INITIAL_TIME;
 	sushiIdCounter = 0;
 	activeSushi = [];
-	currentSetSushiReadings = [];
-	currentSetIndex = 0;
 	last10sTriggered = false;
 	idleTimer = 0;
 	lastKeyTime = 0;
@@ -676,8 +630,7 @@ function startGame() {
 	resultScreen.style.display = "none";
 	gameScreen.style.display = "flex";
 
-	setQueue = buildSetQueue();
-	loadNextSet();
+	nextSpawnTime = performance.now();
 
 	startCountdown(() => {
 		gameState = "playing";
@@ -760,7 +713,7 @@ shareBtn.addEventListener("click", () => {
 
 document.addEventListener("keydown", (e) => {
 	if (gameState === "playing") {
-		if (e.key.length === 1 && /^[a-zA-Z]$/.test(e.key)) {
+		if (e.key.length === 1 && /^[a-zA-Z-]$/.test(e.key)) {
 			e.preventDefault();
 			handleKeyInput(e.key.toLowerCase());
 		} else if (e.key === "Enter" && import.meta.env.DEV) {

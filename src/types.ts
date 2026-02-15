@@ -3,11 +3,6 @@ export interface SushiDef {
 	reading: string;
 }
 
-export interface SushiSet {
-	type: "A" | "B" | "C" | "D";
-	readings: string[];
-}
-
 export interface ActiveSushi {
 	id: number;
 	def: SushiDef;
