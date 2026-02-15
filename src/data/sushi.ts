@@ -32,7 +32,7 @@ export const SUSHI_DEFS: SushiDef[] = [
 	{ name: "メモリリーク丼", reading: "memoriri-kudon", length: "medium" },
 	{ name: "無限ループ巻", reading: "mugenru-pumaki", length: "medium" },
 	{ name: "デプロイ太巻き", reading: "depuroihutomaki", length: "medium" },
-	{ name: "実存主義エビ", reading: "jitsuzonshugiiebi", length: "medium" },
+	{ name: "実存主義エビ", reading: "jitsuzonshugiebi", length: "medium" },
 	{ name: "形而上トロ", reading: "keijijoutoro", length: "medium" },
 	{ name: "形而下サバ", reading: "keijikasaba", length: "medium" },
 	{ name: "認識論的ガリ", reading: "ninshikirontekigari", length: "long" },
