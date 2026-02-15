@@ -1,73 +1,13 @@
 import { GAME_CONFIG } from "./config";
 import { RANKS } from "./data/ranks";
-import { SUSHI_DEFS } from "./data/sushi";
+import { RANDOM_SUSHI_DEFS, SUSHI_DEFS, SUSHI_GROUPS } from "./data/sushi";
 import { TAISHO_LINES } from "./data/taisho";
+import { generateVariants } from "./romaji";
 import type { ActiveSushi, RankDef, SushiDef } from "./types";
 
 const SUSHI_MAP = new Map<string, SushiDef>();
 for (const d of SUSHI_DEFS) {
 	SUSHI_MAP.set(d.reading, d);
-}
-
-// ---------- Romaji Variant Generation ----------
-
-const ROMAJI_SWAPS: [string, string][] = [
-	["shi", "si"],
-	["chi", "ti"],
-	["tsu", "tu"],
-	["fu", "hu"],
-	["ji", "zi"],
-	["sha", "sya"],
-	["shu", "syu"],
-	["sho", "syo"],
-	["cha", "tya"],
-	["chu", "tyu"],
-	["cho", "tyo"],
-	["ja", "zya"],
-	["ju", "zyu"],
-	["jo", "zyo"],
-];
-
-function generateVariants(reading: string): string[] {
-	let variants = new Set<string>([reading]);
-
-	// 伸ばし棒（ハイフン）のバリエーション生成: "sa-mon" -> "saamon" も許容する
-	for (const v of Array.from(variants)) {
-		if (v.includes("-")) {
-			let replaced = v;
-			while (replaced.includes("-")) {
-				const idx = replaced.indexOf("-");
-				if (idx > 0) {
-					const vowel = replaced[idx - 1];
-					replaced =
-						replaced.substring(0, idx) + vowel + replaced.substring(idx + 1);
-				} else {
-					replaced = replaced.replace("-", "");
-				}
-			}
-			variants.add(replaced);
-		}
-	}
-
-	for (const [a, b] of ROMAJI_SWAPS) {
-		const newVariants = new Set<string>();
-		for (const v of variants) {
-			newVariants.add(v);
-			if (v.includes(a)) {
-				newVariants.add(v.split(a).join(b));
-			}
-			if (v.includes(b)) {
-				newVariants.add(v.split(b).join(a));
-			}
-		}
-		variants = newVariants;
-	}
-
-	const arr = Array.from(variants);
-	if (arr.length > 16) {
-		return arr.slice(0, 16);
-	}
-	return arr;
 }
 
 // ---------- Taisho Lines ----------
@@ -231,14 +171,43 @@ function updateSushiVisuals(sushi: ActiveSushi) {
 
 // ---------- Spawn Logic ----------
 
-let remainingSushiReadings: string[] = [];
+let remainingRandomReadings: string[] = [];
+let pendingGroupReadings: string[] = [];
+let remainingGroupIds: string[] = [];
+let nextGroupPickElapsedSec = 10;
 
-function resetSushiReadingPool() {
-	remainingSushiReadings = shuffle(SUSHI_DEFS.map((d) => d.reading));
+function resetRandomReadingPool() {
+	remainingRandomReadings = shuffle(RANDOM_SUSHI_DEFS.map((d) => d.reading));
 }
 
-function pickNextUniqueReading(): string {
-	return remainingSushiReadings.shift() ?? "";
+function resetGroupingState() {
+	pendingGroupReadings = [];
+	remainingGroupIds = shuffle(SUSHI_GROUPS.map((g) => g.id));
+	nextGroupPickElapsedSec = 10;
+}
+
+function pickNextRandomReading(): string {
+	return remainingRandomReadings.shift() ?? "";
+}
+
+function maybeStartNextGroup(elapsedSec: number) {
+	if (elapsedSec < 10) return;
+	if (elapsedSec < nextGroupPickElapsedSec) return;
+	if (pendingGroupReadings.length > 0) return;
+	if (remainingGroupIds.length === 0) return;
+
+	const groupId = remainingGroupIds.shift()!;
+	const group = SUSHI_GROUPS.find((g) => g.id === groupId);
+	if (!group) return;
+	pendingGroupReadings = [...group.readings];
+	nextGroupPickElapsedSec += 10;
+}
+
+function pickNextReadingForSpawn(): string {
+	if (pendingGroupReadings.length > 0) {
+		return pendingGroupReadings.shift() ?? "";
+	}
+	return pickNextRandomReading();
 }
 
 let lastSpawnLane = -1;
@@ -440,6 +409,7 @@ function gameLoop(timestamp: number) {
 	if (gameState !== "playing") return;
 
 	const elapsed = (timestamp - startTime) / 1000;
+	maybeStartNextGroup(elapsed);
 	const speed = Math.min(
 		GAME_CONFIG.INITIAL_SPEED + elapsed * GAME_CONFIG.SPEED_UP_RATE,
 		GAME_CONFIG.MAX_SPEED,
@@ -471,7 +441,7 @@ function gameLoop(timestamp: number) {
 
 	if (
 		timeLeft > 0 &&
-		remainingSushiReadings.length > 0 &&
+		(pendingGroupReadings.length > 0 || remainingRandomReadings.length > 0) &&
 		liveCount < GAME_CONFIG.MAX_LIVE_SUSHI &&
 		(timestamp >= nextSpawnTime || shouldSpawnImmediately)
 	) {
@@ -510,7 +480,7 @@ function gameLoop(timestamp: number) {
 					availableLanes[Math.floor(Math.random() * availableLanes.length)];
 			}
 
-			const reading = pickNextUniqueReading();
+			const reading = pickNextReadingForSpawn();
 			if (reading) {
 				spawnSushi(reading, targetLane);
 			}
@@ -540,7 +510,9 @@ function gameLoop(timestamp: number) {
 	// 1ゲーム中に同一寿司を出さないため、寿司を使い切ったらゲームを終了する
 	if (
 		timeLeft > 0 &&
-		remainingSushiReadings.length === 0 &&
+		pendingGroupReadings.length === 0 &&
+		remainingRandomReadings.length === 0 &&
+		remainingGroupIds.length === 0 &&
 		activeSushi.length === 0
 	) {
 		endGame();
@@ -641,7 +613,8 @@ function startGame() {
 
 	lastSpawnLane = -1;
 	setRandomTaisho();
-	resetSushiReadingPool();
+	resetRandomReadingPool();
+	resetGroupingState();
 
 	const sushiEls = laneArea.querySelectorAll(".sushi-item, .score-popup");
 	sushiEls.forEach((el) => {
@@ -720,6 +693,7 @@ ${rank.emoji} ${rank.name}
 
 ${currentTaishoEmoji} 大将「${currentComment}」
 
+https://quantum-sushi.vercel.app
 #量子マグロ亭`;
 }
 

@@ -3,6 +3,11 @@ export interface SushiDef {
 	reading: string;
 }
 
+export interface SushiGroup {
+	id: string;
+	readings: string[];
+}
+
 export interface ActiveSushi {
 	id: number;
 	def: SushiDef;

@@ -38,6 +38,7 @@ type-check:
 
 check-ts-rules:
 	python3 scripts/check_ts_rules.py
+	node scripts/check_sushi_data.mjs
 
 ts-check-diff:
 	@files="$$( ( \
