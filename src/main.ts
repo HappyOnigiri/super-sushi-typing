@@ -100,6 +100,7 @@ let idleTimer = 0;
 let lastKeyTime = 0;
 let animFrameId = 0;
 let gameTimerId = 0;
+let currentTaishoEmoji = "🧑🏻‍🍳";
 
 // DOM helper
 function getElement<T extends HTMLElement>(id: string): T {
@@ -120,6 +121,7 @@ const laneArea = getElement("lane-area");
 const inputDisplay = getElement("input-display");
 const inputHint = getElement("input-hint");
 const taishoBubble = getElement("taisho-bubble");
+const taishoEmoji = getElement("taisho-emoji");
 const countdownOverlay = getElement("countdown-overlay");
 const comboBurst = getElement("combo-burst");
 
@@ -317,6 +319,12 @@ function showComboBurst(text: string) {
 }
 
 // ---------- Taisho ----------
+
+function setRandomTaisho() {
+	const emojis = GAME_CONFIG.TAISHO_EMOJIS;
+	currentTaishoEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+	taishoEmoji.textContent = currentTaishoEmoji;
+}
 
 let taishoTimeout = 0;
 
@@ -589,6 +597,8 @@ function startGame() {
 	lastKeyTime = 0;
 	lastCaptureTime = 0;
 
+	setRandomTaisho();
+
 	const sushiEls = laneArea.querySelectorAll(".sushi-item, .score-popup");
 	sushiEls.forEach((el) => {
 		el.remove();
@@ -645,12 +655,12 @@ function showResult() {
 	resultRankEmoji.textContent = rank.emoji;
 	resultRankName.textContent = rank.name;
 	resultRankComment.textContent = `「${rank.name}」の称号を獲得！`;
-	resultTaisho.textContent = `👨‍🍳 大将「${rank.taisho}」`;
+	resultTaisho.textContent = `${currentTaishoEmoji} 大将「${rank.taisho}」`;
 }
 
 function getShareText(): string {
 	const rank = getRank(score);
-	return `🍣 回転寿司タイピング 〜正解なき握りの世界〜
+	return `🍣 タイピング回転寿司 量子マグロ亭 〜打てば打つほど回る世界〜
 
 ${rank.emoji} ${rank.name}
 スコア: ${score.toLocaleString()}
@@ -660,7 +670,7 @@ ${rank.emoji} ${rank.name}
 
 大将「${rank.taisho}」
 
-#回転寿司タイピング`;
+#量子マグロ亭`;
 }
 
 // ---------- Event Listeners ----------
@@ -724,3 +734,4 @@ gameState = "title";
 titleScreen.style.display = "flex";
 gameScreen.style.display = "none";
 resultScreen.style.display = "none";
+setRandomTaisho();
