@@ -660,7 +660,7 @@ function showResult() {
 
 function getShareText(): string {
 	const rank = getRank(score);
-	return `🍣 タイピング回転寿司 量子マグロ亭 〜打てば打つほど回る世界〜
+	return `🍣 タイピング回転寿司 量子マグロ亭
 
 ${rank.emoji} ${rank.name}
 スコア: ${score.toLocaleString()}
