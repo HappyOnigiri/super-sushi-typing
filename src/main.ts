@@ -137,6 +137,15 @@ const retryBtn = getElement("retry-btn");
 
 // ---------- Utility ----------
 
+function shuffle<T>(arr: T[]): T[] {
+	const a = [...arr];
+	for (let i = a.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[a[i], a[j]] = [a[j], a[i]];
+	}
+	return a;
+}
+
 function getReadingCharCount(reading: string): number {
 	return reading.length;
 }
@@ -222,9 +231,14 @@ function updateSushiVisuals(sushi: ActiveSushi) {
 
 // ---------- Spawn Logic ----------
 
-function pickRandomReading(): string {
-	const idx = Math.floor(Math.random() * SUSHI_DEFS.length);
-	return SUSHI_DEFS[idx]?.reading ?? SUSHI_DEFS[0]?.reading ?? "";
+let remainingSushiReadings: string[] = [];
+
+function resetSushiReadingPool() {
+	remainingSushiReadings = shuffle(SUSHI_DEFS.map((d) => d.reading));
+}
+
+function pickNextUniqueReading(): string {
+	return remainingSushiReadings.shift() ?? "";
 }
 
 let lastSpawnLane = -1;
@@ -457,6 +471,7 @@ function gameLoop(timestamp: number) {
 
 	if (
 		timeLeft > 0 &&
+		remainingSushiReadings.length > 0 &&
 		liveCount < GAME_CONFIG.MAX_LIVE_SUSHI &&
 		(timestamp >= nextSpawnTime || shouldSpawnImmediately)
 	) {
@@ -495,8 +510,10 @@ function gameLoop(timestamp: number) {
 					availableLanes[Math.floor(Math.random() * availableLanes.length)];
 			}
 
-			const reading = pickRandomReading();
-			spawnSushi(reading, targetLane);
+			const reading = pickNextUniqueReading();
+			if (reading) {
+				spawnSushi(reading, targetLane);
+			}
 			lastSpawnLane = targetLane;
 
 			// Calculate next spawn time based on progress
@@ -518,6 +535,16 @@ function gameLoop(timestamp: number) {
 				nextSpawnTime = timestamp + GAME_CONFIG.IMMEDIATE_SPAWN_DELAY;
 			}
 		}
+	}
+
+	// 1ゲーム中に同一寿司を出さないため、寿司を使い切ったらゲームを終了する
+	if (
+		timeLeft > 0 &&
+		remainingSushiReadings.length === 0 &&
+		activeSushi.length === 0
+	) {
+		endGame();
+		return;
 	}
 
 	if (timeLeft <= 0 && activeSushi.length === 0) {
@@ -614,6 +641,7 @@ function startGame() {
 
 	lastSpawnLane = -1;
 	setRandomTaisho();
+	resetSushiReadingPool();
 
 	const sushiEls = laneArea.querySelectorAll(".sushi-item, .score-popup");
 	sushiEls.forEach((el) => {
