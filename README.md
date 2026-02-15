@@ -6,6 +6,9 @@
 
 <img src="public/title.png" alt="Quantum Maguro Tei Title" width="400">
 
+
+### 🚀 今すぐ遊ぶ: <a href="https://quantum-maguro.vercel.app/" target="_blank">quantum-maguro.vercel.app</a>
+
 ## ゲームの醍醐味
 
 流れる寿司をテンポよく取り、ハイスコアを目指しましょう！
