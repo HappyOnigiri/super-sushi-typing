@@ -35,13 +35,13 @@ random_sushis:
   - name: 限界オタクネギトロ
     reading: genkaiotakunegitoro
   - name: てぇてぇタマゴ
-    reading: texetuexetamago
+    reading: texetexetamago
   - name: わかりみが深いアジ
     reading: wakarimigafukaiaji
   - name: つらみ軍艦
     reading: tsuramigunkan
   - name: しか勝たんカツオ
-    reading: shikakatankatuo
+    reading: shikakatankatsuo
   - name: バズりトロ
     reading: bazuritoro
   - name: マジ卍巻き
@@ -59,7 +59,7 @@ random_sushis:
   - name: 優勝イクラ
     reading: yuushouikura
   - name: 進捗ダメですサバ
-    reading: shinchokudamesusaba
+    reading: shinchokudamedesusaba
   - name: ンゴ巻き
     reading: ngomaki
   - name: 全集中マグロ
@@ -69,7 +69,7 @@ random_sushis:
   - name: ドンマイいなり
     reading: donmaiinari
   - name: やばたにえんエビ
-    reading: yabatanienebi
+    reading: yabataniennebi
 
   # --- エンジニア用語系 ---
   - name: ポインタイカ
@@ -81,15 +81,13 @@ random_sushis:
   - name: リファクタ鯛
     reading: rifakutatai
   - name: マージコンフリクト巻
-    reading: ma-jikonhurikutomaki
+    reading: ma-jikonfurikutomaki
   - name: プルリクイクラ
     reading: pururikuikura
   - name: コードレビューえび
     reading: ko-dorebyu-ebi
   - name: ガベコレ軍艦
     reading: gabekoregunkan
-  - name: スタックオーバーフロー丼
-    reading: sutakkuo-ba-furo-don-random
   - name: コンパイルエラー巻
     reading: konpairuera-maki
   - name: シンタックスエラーアジ
@@ -123,7 +121,7 @@ random_sushis:
   - name: イベントドリブン巻き
     reading: ibentodoribunmaki
   - name: モノリスマグロ
-    reading: monolisumaguro
+    reading: monorisumaguro
   - name: ポリモーフィズム穴子
     reading: porimo-fizumuanago
   - name: シングルトン巻き
@@ -165,7 +163,7 @@ random_sushis:
   - name: バーンダウンいなり
     reading: ba-ndauninari
   - name: テックデット巻き
-    reading: tekkudetomaki
+    reading: tekkudettomaki
 
   # --- ボケ・ナンセンス系 ---
   - name: 概念サーモン
@@ -272,8 +270,6 @@ random_sushis:
     reading: aosamisoshiru
   - name: 茶碗蒸し
     reading: chawanmushi
-  - name: 回転プリン
-    reading: kaitenpurin-random
   - name: 100円皿サバ
     reading: hyakuensarasaba
   - name: 金皿マグロ
@@ -301,7 +297,7 @@ random_sushis:
   - name: わさびマシマシ巻き
     reading: wasabimashimashimaki
   - name: しょうゆ溺れサバ
-    reading: shouyuoborenosaba
+    reading: shouyuoboresaba
   - name: カピバラ湯呑み
     reading: kapibarayunomi
   - name: 無限ガリ
@@ -389,7 +385,7 @@ random_sushis:
   - name: シュワシュワメロンソーダ
     reading: shuwashuwameronso-da
   - name: ビー玉が取れないラムネ
-    reading: bi-damagatorenailamune
+    reading: bi-damagatorenairamune
   - name: 氷多すぎコーラフロート
     reading: koorioosugiko-rafuro-to
 
@@ -451,7 +447,7 @@ random_sushis:
   - name: リモートワーク巻き
     reading: rimo-towa-kumaki
   - name: スタンディングデスクえび
-    reading: sutandeingudesukuebi
+    reading: sutandingudesukuebi
   - name: 集中できないイカ
     reading: shuuchuudekinaiika
   - name: スランプ軍艦
@@ -598,7 +594,7 @@ sushi_groups:
     # 先頭共通: "gitno"
     sushis:
       - name: Gitのコンフリクト巻き
-        reading: gitnokonhurikutomaki
+        reading: gitnokonfurikutomaki
       - name: Gitのログ追跡イカ
         reading: gitnorogutsuisekiika
       - name: Gitの黒歴史サバ
@@ -625,7 +621,7 @@ sushi_groups:
         reading: npmnozeijyakuseisaba
 
   - id: dev-head-11
-    # 先頭共通: "kuraudо"
+    # 先頭共通: "kuraudo"
     sushis:
       - name: クラウド破産マグロ
         reading: kuraudohasanmaguro
@@ -635,7 +631,7 @@ sushi_groups:
         reading: kuraudoshougaiinari
 
   - id: dev-head-12
-    # 先頭共通: "eresu"
+    # 先頭共通: "era-"
     sushis:
       - name: エラーすら出ないイカ
         reading: era-suradenaiika
@@ -655,7 +651,7 @@ sushi_groups:
         reading: ryoushigari
 
   - id: quantum-head-2
-    # 先頭共通: "jigеn"
+    # 先頭共通: "jigen"
     sushis:
       - name: 次元のはざまサーモン
         reading: jigennohazamasa-mon
@@ -695,7 +691,7 @@ sushi_groups:
         reading: fukashimaguro
 
   - id: boke-head-4
-    # 先頭共通: "shinуа"
+    # 先頭共通: "shinya"
     sushis:
       - name: 深夜テンション巻き
         reading: shinyatenshonmaki
@@ -715,7 +711,7 @@ sushi_groups:
         reading: kaitenzushidebyu-tai
 
   - id: sushi-head-2
-    # 先頭共通: "garі"
+    # 先頭共通: "gari"
     sushis:
       - name: ガリだけで満足
         reading: garidakedemanzoku
@@ -815,7 +811,7 @@ sushi_groups:
         reading: konsorudakegatomodachisaba
 
   - id: dev-head-14
-    # 先頭共通: "rimо-to"
+    # 先頭共通: "rimo-to"
     sushis:
       - name: リモート会議マグロ
         reading: rimo-tokaigimaguro
@@ -1072,7 +1068,7 @@ sushi_groups:
       - name: ヘビーローテーション巻き
         reading: hebi-ro-te-shonmaki
       - name: スタンディングオベーション巻き
-        reading: sutandeinguobe-shonmaki
+        reading: sutandinguobe-shonmaki
       - name: コミュニケーション巻き
         reading: komyunike-shonmaki
 
@@ -1310,7 +1306,7 @@ sushi_groups:
     # 末尾共通: "tamago"
     sushis:
       - name: プロトタイプたまご
-        reading: purototaipitamago
+        reading: purototaiputamago
       - name: アーキタイプたまご
         reading: a-kitaiputamago
       - name: ステレオタイプたまご
