@@ -485,12 +485,15 @@ function gameLoop(timestamp: number) {
 	});
 
 	const liveCount = activeSushi.filter((s) => !s.captured).length;
+	// 残りの寿司が少ない場合（閾値以下）は、出現時間を待たずに即座に出現させる
+	const shouldSpawnImmediately =
+		liveCount <= GAME_CONFIG.IMMEDIATE_SPAWN_THRESHOLD;
 
 	if (
 		timeLeft > 0 &&
 		currentSetSushiReadings.length > 0 &&
 		liveCount < GAME_CONFIG.MAX_LIVE_SUSHI &&
-		timestamp >= nextSpawnTime
+		(timestamp >= nextSpawnTime || shouldSpawnImmediately)
 	) {
 		const laneWidth = laneArea.clientWidth || 800;
 		const availableLanes: number[] = [];
@@ -544,6 +547,11 @@ function gameLoop(timestamp: number) {
 				GAME_CONFIG.SPAWN_INTERVAL_RANDOM * (1.0 - progress * 0.5);
 
 			nextSpawnTime = timestamp + currentBase + Math.random() * currentRandom;
+
+			// 即時出現モードの場合は、次の出現までの時間を短縮する
+			if (shouldSpawnImmediately) {
+				nextSpawnTime = timestamp + GAME_CONFIG.IMMEDIATE_SPAWN_DELAY;
+			}
 		}
 	}
 

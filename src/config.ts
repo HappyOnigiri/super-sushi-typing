@@ -39,7 +39,7 @@ export const GAME_CONFIG = {
 	LANE_Y_POSITIONS: [18, 149, 280],
 
 	/** 次の寿司が出るまでに必要な最低距離（px） */
-	MIN_SPAWN_DISTANCE: 350,
+	MIN_SPAWN_DISTANCE: 300,
 
 	/** 寿司の再出現間隔（ミリ秒） - 初期値 */
 	SPAWN_INTERVAL_BASE: 1200,
@@ -48,6 +48,12 @@ export const GAME_CONFIG = {
 
 	/** 画面内に表示できる寿司の最大数 */
 	MAX_LIVE_SUSHI: 10,
+
+	/** 即時出現モードになる寿司の残り数閾値 */
+	IMMEDIATE_SPAWN_THRESHOLD: 3,
+
+	/** 即時出現モード時の次の出現までの待機時間（ミリ秒） */
+	IMMEDIATE_SPAWN_DELAY: 200,
 
 	/** 寿司の右端出現位置のオフセット */
 	SPAWN_X_OFFSET: 100,
