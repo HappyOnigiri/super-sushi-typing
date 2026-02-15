@@ -1,82 +1,51 @@
-import type { SushiDef, SushiSet } from "../types";
+import { parse } from "yaml";
+import type { SushiDef } from "../types";
+import sushiYaml from "./sushi.yaml?raw";
 
-export const SUSHI_DEFS: SushiDef[] = [
-	{ name: "量子マグロ", reading: "ryoushimaguro" },
-	{ name: "量子エビ", reading: "ryoushiebi" },
-	{ name: "量子もつれ軍艦", reading: "ryoushimotsuregunkan" },
-	{ name: "不確定サーモン", reading: "fukakuteisa-mon" },
-	{ name: "超弦理論ウニ", reading: "chougenrironuni" },
-	{
-		name: "暗黒物質カッパ巻",
-		reading: "ankokubusshitsukappamaki",
-	},
-	{ name: "反物質ネギトロ", reading: "hanbusshitsunegitoro" },
-	{
-		name: "シュレディンガーの鯖",
-		reading: "shuredinga-nosaba",
-	},
-	{ name: "波動関数エビ", reading: "hadoukansuebi" },
-	{ name: "相対性イカ", reading: "soutaiseiika" },
-	{ name: "素粒子ししゃも", reading: "soryuushishishamo" },
-	{ name: "分散キュウリ巻", reading: "bunsankyuurimaki" },
-	{ name: "非同期イクラ", reading: "hidoukiikura" },
-	{ name: "非同期エビ", reading: "hidoukiebi" },
-	{
-		name: "クラウドネイティブ玉子",
-		reading: "kuraudoneitibutamago",
-	},
-	{ name: "再帰アナゴ", reading: "saikianago" },
-	{ name: "メモリリーク丼", reading: "memoriri-kudon" },
-	{ name: "無限ループ巻", reading: "mugenru-pumaki" },
-	{ name: "デプロイ太巻き", reading: "depuroihutomaki" },
-	{ name: "実存主義エビ", reading: "jitsuzonshugiebi" },
-	{ name: "形而上トロ", reading: "keijijoutoro" },
-	{ name: "形而下サバ", reading: "keijikasaba" },
-	{ name: "認識論的ガリ", reading: "ninshikirontekigari" },
-	{ name: "弁証法カツオ", reading: "benshouhoukatsuo" },
-	{ name: "虚無ハマチ", reading: "kyomuhamachi" },
-	{ name: "脱構築ちらし", reading: "datsukouchikuchirashi" },
-	{ name: "概念としてのサバ", reading: "gainentoshitenosaba" },
-	{ name: "前世の記憶アジ", reading: "zensenokiokuaji" },
-	{ name: "ほぼ鯛", reading: "hobotai" },
-	{ name: "たぶんカンパチ", reading: "tabunkanpachi" },
-	{ name: "解釈違いトロ", reading: "kaishakuchigaitoro" },
-	{ name: "見た目だけ大トロ", reading: "mitamedakeootoro" },
-	{ name: "哀愁のカッパ巻", reading: "aishuunokappamaki" },
-	{ name: "存在しないウニ", reading: "sonzaishinaiuni" },
-	{ name: "エモい赤身", reading: "emoiakami" },
-	{ name: "既視感サバ", reading: "kishikansaba" },
-	{ name: "タイムリープ鮭", reading: "taimuri-pusake" },
-	{ name: "切なさ軍艦", reading: "setsunasagunkan" },
-	{ name: "アンニュイ鯛", reading: "annyuitai" },
-	{ name: "逆回転マグロ", reading: "gyakukaitenmaguro" },
-	{ name: "四次元ネタ", reading: "yojigenneta" },
-];
+type SushiYamlRoot = {
+	sushis: Array<{
+		name: string;
+		reading: string;
+	}>;
+};
 
-export const SUSHI_SETS: SushiSet[] = [
-	{
-		type: "A",
-		readings: ["ryoushimaguro", "ryoushiebi", "ryoushimotsuregunkan"],
-	},
-	{ type: "A", readings: ["hidoukiikura", "hidoukiebi", "hobotai"] },
-	{ type: "A", readings: ["keijijoutoro", "keijikasaba", "emoiakami"] },
-	{ type: "B", readings: ["kyomuhamachi", "saikianago", "hobotai"] },
-	{ type: "B", readings: ["soutaiseiika", "bunsankyuurimaki", "annyuitai"] },
-	{
-		type: "C",
-		readings: ["kishikansaba", "kaishakuchigaitoro", "gainentoshitenosaba"],
-	},
-	{
-		type: "D",
-		readings: ["ankokubusshitsukappamaki", "emoiakami", "annyuitai"],
-	},
-	{
-		type: "B",
-		readings: ["tabunkanpachi", "memoriiriikudon", "setsunasagunkan"],
-	},
-	{
-		type: "A",
-		readings: ["jitsuzonshugiiebi", "hadoukansuebi", "soryuushishishamo"],
-	},
-	{ type: "D", readings: ["ninshikirontekigari", "hobotai", "annyuitai"] },
-];
+function isRecord(v: unknown): v is Record<string, unknown> {
+	return typeof v === "object" && v !== null;
+}
+
+function toSushiDefsFromYaml(rawYaml: string): SushiDef[] {
+	const parsed = parse(rawYaml) as unknown;
+	if (!isRecord(parsed)) {
+		throw new Error(
+			"sushi.yaml の形式が不正です（root が object ではありません）",
+		);
+	}
+	const root = parsed as Partial<SushiYamlRoot>;
+	if (!Array.isArray(root.sushis)) {
+		throw new Error(
+			"sushi.yaml の形式が不正です（sushis が配列ではありません）",
+		);
+	}
+
+	const defs: SushiDef[] = [];
+	for (const item of root.sushis) {
+		if (!isRecord(item)) {
+			throw new Error(
+				"sushi.yaml の形式が不正です（sushis に object 以外が含まれています）",
+			);
+		}
+		const name = item.name;
+		const reading = item.reading;
+		if (typeof name !== "string" || name.length === 0) {
+			throw new Error("sushi.yaml の形式が不正です（name が不正です）");
+		}
+		if (typeof reading !== "string" || reading.length === 0) {
+			throw new Error("sushi.yaml の形式が不正です（reading が不正です）");
+		}
+		defs.push({ name, reading });
+	}
+
+	return defs;
+}
+
+export const SUSHI_DEFS: SushiDef[] = toSushiDefsFromYaml(sushiYaml);

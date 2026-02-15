@@ -1,0 +1,89 @@
+## 寿司一覧データ（AI生成・編集用）
+##
+## - `name`: 表示名
+## - `reading`: タイピングするローマ字（スコア計算は reading の文字数を利用）
+##
+## 注意: ゲーム内で参照している寿司一覧の正はこのファイルです（`src/data/sushi.ts` は読み込みロジックのみ）。
+sushis:
+  - name: 量子マグロ
+    reading: ryoushimaguro
+  - name: 量子エビ
+    reading: ryoushiebi
+  - name: 量子もつれ軍艦
+    reading: ryoushimotsuregunkan
+  - name: 不確定サーモン
+    reading: fukakuteisa-mon
+  - name: 超弦理論ウニ
+    reading: chougenrironuni
+  - name: 暗黒物質カッパ巻
+    reading: ankokubusshitsukappamaki
+  - name: 反物質ネギトロ
+    reading: hanbusshitsunegitoro
+  - name: シュレディンガーの鯖
+    reading: shuredinga-nosaba
+  - name: 波動関数エビ
+    reading: hadoukansuebi
+  - name: 相対性イカ
+    reading: soutaiseiika
+  - name: 素粒子ししゃも
+    reading: soryuushishishamo
+  - name: 分散キュウリ巻
+    reading: bunsankyuurimaki
+  - name: 非同期イクラ
+    reading: hidoukiikura
+  - name: 非同期エビ
+    reading: hidoukiebi
+  - name: クラウドネイティブ玉子
+    reading: kuraudoneitibutamago
+  - name: 再帰アナゴ
+    reading: saikianago
+  - name: メモリリーク丼
+    reading: memoriri-kudon
+  - name: 無限ループ巻
+    reading: mugenru-pumaki
+  - name: デプロイ太巻き
+    reading: depuroihutomaki
+  - name: 実存主義エビ
+    reading: jitsuzonshugiebi
+  - name: 形而上トロ
+    reading: keijijoutoro
+  - name: 形而下サバ
+    reading: keijikasaba
+  - name: 認識論的ガリ
+    reading: ninshikirontekigari
+  - name: 弁証法カツオ
+    reading: benshouhoukatsuo
+  - name: 虚無ハマチ
+    reading: kyomuhamachi
+  - name: 脱構築ちらし
+    reading: datsukouchikuchirashi
+  - name: 概念としてのサバ
+    reading: gainentoshitenosaba
+  - name: 前世の記憶アジ
+    reading: zensenokiokuaji
+  - name: ほぼ鯛
+    reading: hobotai
+  - name: たぶんカンパチ
+    reading: tabunkanpachi
+  - name: 解釈違いトロ
+    reading: kaishakuchigaitoro
+  - name: 見た目だけ大トロ
+    reading: mitamedakeootoro
+  - name: 哀愁のカッパ巻
+    reading: aishuunokappamaki
+  - name: 存在しないウニ
+    reading: sonzaishinaiuni
+  - name: エモい赤身
+    reading: emoiakami
+  - name: 既視感サバ
+    reading: kishikansaba
+  - name: タイムリープ鮭
+    reading: taimuri-pusake
+  - name: 切なさ軍艦
+    reading: setsunasagunkan
+  - name: アンニュイ鯛
+    reading: annyuitai
+  - name: 逆回転マグロ
+    reading: gyakukaitenmaguro
+  - name: 四次元ネタ
+    reading: yojigenneta
