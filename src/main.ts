@@ -719,7 +719,7 @@ ${rank.emoji} ${rank.name}
 最大コンボ: ${maxCombo}
 最大同時取り: ${maxSimultaneous}皿！
 
-大将「${rank.taisho}」
+${currentTaishoEmoji} 大将「${rank.taisho}」
 
 #量子マグロ亭`;
 }
