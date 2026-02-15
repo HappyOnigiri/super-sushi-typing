@@ -653,7 +653,6 @@ function startGame(config: GameConfig = NORMAL_CONFIG) {
 	startCountdown(() => {
 		gameState = "playing";
 		startTime = performance.now();
-		setTaishoLine("start");
 		startTimer();
 		animFrameId = requestAnimationFrame(gameLoop);
 	});
