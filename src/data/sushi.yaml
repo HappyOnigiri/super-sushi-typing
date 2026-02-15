@@ -159,7 +159,7 @@ random_sushis:
   - name: モブプロ軍艦
     reading: mobupurogunkan
   - name: レトロスペクティブ丼
-    reading: retorosupekutibudon
+    reading: retorosupekuthibudon
   - name: バーンダウンいなり
     reading: ba-ndauninari
   - name: テックデット巻き
@@ -940,7 +940,7 @@ sushi_groups:
       - name: ネタバレエビ
         reading: netabareebi
       - name: クリティカルエビ
-        reading: kuritikaruebi
+        reading: kurithikaruebi
 
   - id: tail-saba-1
     # 末尾共通: "saba"
@@ -1016,11 +1016,11 @@ sushi_groups:
     # 末尾共通: "tai"
     sushis:
       - name: インフィニティ鯛
-        reading: infinititai
+        reading: infinithitai
       - name: グラビティ鯛
-        reading: gurabititai
+        reading: gurabithitai
       - name: ユーティリティ鯛
-        reading: yu-tirititai
+        reading: yu-thirithitai
 
   - id: tail-gunkan-1
     # 末尾共通: "gunkan"
@@ -1056,7 +1056,7 @@ sushi_groups:
     # 末尾共通: "maki"
     sushis:
       - name: フォースプッシュ巻き
-        reading: fo-supushumaki
+        reading: fo-supusshumaki
       - name: チェリーピック巻き
         reading: cheri-pikkumaki
       - name: リベース巻き
@@ -1156,11 +1156,11 @@ sushi_groups:
     # 末尾共通: "sa-mon"
     sushis:
       - name: リアクティブサーモン
-        reading: riakutibusa-mon
+        reading: riakuthibusa-mon
       - name: プロアクティブサーモン
-        reading: puroakutibusa-mon
+        reading: puroakuthibusa-mon
       - name: インタラクティブサーモン
-        reading: intarakutibusa-mon
+        reading: intarakuthibusa-mon
 
   - id: tail-don-1
     # 末尾共通: "don"
