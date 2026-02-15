@@ -149,8 +149,8 @@ function shuffle<T>(arr: T[]): T[] {
 	return a;
 }
 
-function getBasePoints(length: "short" | "medium" | "long"): number {
-	return GAME_CONFIG.BASE_POINTS[length] || 0;
+function getReadingCharCount(reading: string): number {
+	return reading.length;
 }
 
 function getSimultaneousMultiplier(count: number): number {
@@ -401,7 +401,8 @@ function handleKeyInput(char: string, isDebugAutoMatch = false) {
 			if (combo > maxCombo) maxCombo = combo;
 			totalPlates++;
 
-			const basePoints = getBasePoints(sushi.def.length);
+			const basePoints =
+				GAME_CONFIG.BASE_POINTS + getReadingCharCount(sushi.def.reading);
 			const comboMultiplier = 1 + combo * GAME_CONFIG.COMBO_MULTIPLIER_RATE;
 			const points = Math.round(basePoints * comboMultiplier * simulMultiplier);
 			score += points;
@@ -433,7 +434,8 @@ function handleKeyInput(char: string, isDebugAutoMatch = false) {
 			setTaishoLine("simul2");
 			showComboBurst("✨ 2貫同時！");
 		} else {
-			if (capturedThisTick[0].def.length === "long") {
+			const charCount = getReadingCharCount(capturedThisTick[0].def.reading);
+			if (charCount >= GAME_CONFIG.LONG_READING_THRESHOLD) {
 				setTaishoLine("long_complete");
 			} else {
 				setTaishoLine("capture1");

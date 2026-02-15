@@ -28,12 +28,11 @@ export const GAME_CONFIG = {
 		4: 50, // 4皿以上
 	} as Record<number, number>,
 
-	/** 寿司の長さごとの基礎点 */
-	BASE_POINTS: {
-		short: 80,
-		medium: 150,
-		long: 300,
-	} as Record<"short" | "medium" | "long", number>,
+	/** 寿司1貫あたりの基礎点（この値 + タイピング文字数 がスコア計算の元になる） */
+	BASE_POINTS: 120,
+
+	/** 「長い寿司を打ち切った」演出を出す文字数の閾値 */
+	LONG_READING_THRESHOLD: 18,
 
 	/** 各レーンのY座標（下からの距離 px） */
 	LANE_Y_POSITIONS: [18, 149, 280],

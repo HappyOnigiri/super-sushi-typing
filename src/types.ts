@@ -1,7 +1,6 @@
 export interface SushiDef {
 	name: string;
 	reading: string;
-	length: "short" | "medium" | "long";
 }
 
 export interface SushiSet {
