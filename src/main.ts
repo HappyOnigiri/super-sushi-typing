@@ -62,6 +62,7 @@ const taishoBubble = getElement("taisho-bubble");
 const taishoEmoji = getElement("taisho-emoji");
 const countdownOverlay = getElement("countdown-overlay");
 const comboBurst = getElement("combo-burst");
+const appFooter = document.querySelector(".app-footer");
 
 // Result refs
 const resultScore = getElement("result-score");
@@ -629,7 +630,10 @@ function startGame() {
 
 	titleScreen.style.display = "none";
 	resultScreen.style.display = "none";
+	titleScreen.style.display = "none";
+	resultScreen.style.display = "none";
 	gameScreen.style.display = "flex";
+	appFooter?.classList.add("hidden");
 
 	nextSpawnTime = performance.now();
 
@@ -661,6 +665,7 @@ function getRank(score: number): RankDef {
 function showResult() {
 	gameScreen.style.display = "none";
 	resultScreen.style.display = "flex";
+	appFooter?.classList.remove("hidden");
 
 	const rank = getRank(score);
 	const randomComment =
@@ -744,5 +749,7 @@ document.addEventListener("keydown", (e) => {
 gameState = "title";
 titleScreen.style.display = "flex";
 gameScreen.style.display = "none";
+gameScreen.style.display = "none";
 resultScreen.style.display = "none";
+appFooter?.classList.remove("hidden");
 setRandomTaisho();

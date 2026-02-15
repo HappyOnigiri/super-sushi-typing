@@ -16,7 +16,8 @@ html,
 body {
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   background-color: var(--cyber-bg);
   background-image:
     linear-gradient(var(--cyber-grid) 1px, transparent 1px),
@@ -29,14 +30,14 @@ body {
 #app {
   width: 100%;
   max-width: 1000px;
-  height: 100vh;
+  min-height: 100vh;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
-  overflow: hidden;
+  /* overflow: hidden; Removed to allow scrolling on small screens */
   background: radial-gradient(
     circle at center,
     rgba(0, 20, 40, 0.8) 0%,
@@ -78,6 +79,8 @@ body {
   z-index: 10;
   animation: fadeIn 0.6s ease;
   position: relative;
+  flex: 1;
+  width: 100%;
 }
 
 #title-screen h1 {
@@ -211,14 +214,15 @@ body {
 #game-screen {
   display: none;
   width: 100%;
-  height: 100%;
+  flex: 1;
   flex-direction: column;
   position: relative;
 }
 
 /* Header */
 #game-header {
-  height: 10%;
+  flex-shrink: 0;
+  padding: 0.5em 0;
   min-height: 50px;
   display: flex;
   align-items: center;
@@ -261,8 +265,8 @@ body {
 
 /* Lane Area */
 #lane-area {
-  height: 40%;
-  min-height: 250px;
+  flex-grow: 1;
+  min-height: 150px;
   position: relative;
   overflow: hidden;
   flex-shrink: 0;
@@ -404,7 +408,8 @@ body {
 
 /* Input Area */
 #input-area {
-  height: 25%;
+  flex-shrink: 0;
+  padding: 1.5em 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -465,7 +470,8 @@ body {
 
 /* Taisho Area */
 #taisho-area {
-  height: 25%;
+  flex-shrink: 0;
+  padding: 1em 2em;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -544,6 +550,8 @@ body {
   animation: fadeIn 0.8s ease;
   padding: 1em;
   gap: 0.5em;
+  flex: 1;
+  width: 100%;
 }
 #result-screen h2 {
   font-size: 3.5rem;
@@ -774,6 +782,11 @@ body {
   border-top: 1px solid rgba(0, 243, 255, 0.2);
   z-index: 100;       /* 重なり順を確保 */
   backdrop-filter: blur(5px);
+  transition: transform 0.3s ease;
+}
+
+.app-footer.hidden {
+  display: none !important;
 }
 
 .footer-content {
@@ -792,6 +805,60 @@ body {
   display: flex;
   align-items: center;
   gap: 1.5rem;
+}
+
+@media (max-height: 700px) {
+  #title-screen h1 {
+    font-size: 2.5rem;
+  }
+  .title-image {
+    width: 200px;
+  }
+  #title-screen .rules {
+    font-size: 0.85rem;
+    padding: 1em 1.5em;
+    margin-bottom: 1.5em;
+  }
+  #title-screen .start-btn {
+    font-size: 1.4rem;
+    padding: 0.6em 2em;
+  }
+  
+  /* Game Screen Adjustments */
+  #game-header {
+    min-height: auto;
+    gap: 1em;
+    padding: 0.2em 0;
+  }
+  .header-value {
+    font-size: 1.2rem;
+  }
+  
+  #lane-area {
+    min-height: 120px;
+  }
+  
+  #input-area {
+    padding: 0.5em 0;
+    gap: 0.2em;
+  }
+  #input-display {
+    font-size: 1.5rem;
+    min-height: 2rem;
+    padding: 0 10px;
+  }
+  
+  #taisho-area {
+    padding: 0.5em 1em;
+  }
+  #taisho-emoji {
+    font-size: 2.5rem;
+    width: 60px;
+  }
+  #taisho-bubble {
+    font-size: 0.9rem;
+    min-height: 3rem;
+  }
 }
 
 .footer-links a {
