@@ -4,9 +4,7 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
 ![Vite](https://img.shields.io/badge/Vite-5.0-646CFF)
 
-流れてくる寿司の**ローマ字**をタイプして皿を取る、短時間スコアアタックのタイピングゲームです。
-
-このゲーム最大の魅力は **「同時取り」**！タイミングを合わせて複数の寿司を一度に仕留めることで、圧倒的な爽快感とともにハイスコアを叩き出すことができます。
+<img src="public/title.png" alt="Quantum Maguro Tei Title" width="400">
 
 ## ゲームの醍醐味
 
