@@ -23,9 +23,9 @@ export const GAME_CONFIG = {
 	/** 同時消しの倍率設定 */
 	SIMULTANEOUS_MULTIPLIERS: {
 		1: 1,
-		2: 5,
-		3: 15,
-		4: 50, // 4皿以上
+		2: 2,
+		3: 4,
+		4: 8, // 4皿以上
 	} as Record<number, number>,
 
 	/** 寿司1貫あたりの基礎点（この値 + タイピング文字数 がスコア計算の元になる） */
@@ -46,7 +46,7 @@ export const GAME_CONFIG = {
 	SPAWN_INTERVAL_MIN: 500,
 
 	/** 画面内に表示できる寿司の最大数 */
-	MAX_LIVE_SUSHI: 10,
+	MAX_LIVE_SUSHI: 7,
 
 	/** 即時出現モードになる寿司の残り数閾値 */
 	IMMEDIATE_SPAWN_THRESHOLD: 3,
@@ -58,7 +58,7 @@ export const GAME_CONFIG = {
 	SPAWN_X_OFFSET: 100,
 
 	/** 寿司が画面外とみなされるX座標（左端） */
-	DESPAWN_X: -200,
+	DESPAWN_X: -280,
 
 	/** 大将の絵文字の候補 */
 	TAISHO_EMOJIS: [

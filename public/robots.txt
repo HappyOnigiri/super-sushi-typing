@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://quantum-sushi.vercel.app/sitemap.xml
