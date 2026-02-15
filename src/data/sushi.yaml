@@ -538,7 +538,7 @@ sushi_groups:
     # 先頭共通: "ro-ru"
     sushis:
       - name: ロールバックえび
-        reading: ro-rubakkuebi-head
+        reading: ro-rubakkuebi
       - name: ロールフォワード鯛
         reading: ro-rufowa-dotai
       - name: ロール巻きマグロ
