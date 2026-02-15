@@ -4,6 +4,7 @@ import { RANDOM_SUSHI_DEFS, SUSHI_DEFS, SUSHI_GROUPS } from "./data/sushi";
 import { TAISHO_LINES } from "./data/taisho";
 import { generateVariants } from "./romaji";
 import type { ActiveSushi, RankDef, SushiDef } from "./types";
+import packageJson from "../package.json";
 
 let currentConfig: GameConfig = NORMAL_CONFIG;
 
@@ -65,6 +66,10 @@ const taishoEmoji = getElement("taisho-emoji");
 const countdownOverlay = getElement("countdown-overlay");
 const comboBurst = getElement("combo-burst");
 const appFooter = document.querySelector(".app-footer");
+const appVersion = document.getElementById("app-version");
+if (appVersion) {
+	appVersion.textContent = `v${packageJson.version}`;
+}
 
 // Result refs
 const resultScore = getElement("result-score");
