@@ -197,12 +197,15 @@ body {
   align-items: center;
   justify-content: center;
   gap: 3em;
+  font-family: "Orbitron", sans-serif;
   font-size: 1.4rem;
   font-weight: 700;
-  background: rgba(0, 0, 0, 0.3);
-  border-bottom: 2px solid rgba(255, 215, 0, 0.2);
+  background: rgba(0, 10, 20, 0.8);
+  border-bottom: 2px solid var(--cyber-blue);
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
   z-index: 5;
   flex-shrink: 0;
+  backdrop-filter: blur(5px);
 }
 .header-item {
   display: flex;
@@ -210,18 +213,23 @@ body {
   gap: 0.6em;
 }
 .header-label {
-  color: #aaa;
-  font-size: 0.95rem;
+  color: var(--cyber-blue);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 5px var(--cyber-blue);
 }
 .header-value {
-  color: #ffd700;
+  color: #fff;
   font-size: 1.8rem;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 #time-value {
-  color: #ff6b6b;
+  color: var(--cyber-pink);
+  text-shadow: 0 0 10px var(--cyber-pink);
 }
 #combo-value {
   color: #7bed9f;
+  text-shadow: 0 0 10px #7bed9f;
 }
 
 /* Lane Area */
@@ -234,12 +242,28 @@ body {
   width: 100%;
   background: linear-gradient(
     to bottom,
-    rgba(255, 255, 255, 0.02) 0%,
+    rgba(0, 243, 255, 0.05) 0%,
     transparent 20%,
     transparent 80%,
-    rgba(0, 0, 0, 0.2) 100%
+    rgba(0, 0, 0, 0.4) 100%
   );
+  border-top: 1px solid rgba(0, 243, 255, 0.1);
+  border-bottom: 1px solid rgba(0, 243, 255, 0.1);
 }
+#lane-area::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
 #belt {
   position: absolute;
   bottom: 30px;
@@ -248,13 +272,15 @@ body {
   height: 20px;
   background: repeating-linear-gradient(
     90deg,
-    #333 0px,
-    #333 30px,
-    #444 30px,
-    #444 60px
+    #1a1a2e 0px,
+    #1a1a2e 30px,
+    #16213e 30px,
+    #16213e 60px
   );
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6);
+  border-radius: 2px;
+  box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
+  border-top: 2px solid var(--cyber-blue);
+  border-bottom: 2px solid var(--cyber-blue);
 }
 #belt::before {
   content: "";
@@ -263,8 +289,9 @@ body {
   left: 0;
   right: 0;
   bottom: -4px;
-  border-radius: 12px;
-  border: 3px solid #555;
+  border: none;
+  box-shadow: 0 0 10px var(--cyber-blue);
+  opacity: 0.5;
 }
 
 /* Sushi Item */
@@ -279,14 +306,15 @@ body {
   z-index: 2;
 }
 .sushi-name {
+  font-family: "M PLUS Rounded 1c", sans-serif;
   font-size: 1.25rem;
   font-weight: 900;
   color: #fff;
   margin-bottom: 4px;
   white-space: nowrap;
   text-shadow:
-    0 2px 4px rgba(0, 0, 0, 1),
-    0 0 10px rgba(0, 0, 0, 0.8);
+    0 2px 2px rgba(0, 0, 0, 0.9),
+    0 0 8px rgba(0, 243, 255, 0.5);
 }
 .sushi-reading {
   font-family: "Fira Code", monospace;
@@ -295,20 +323,24 @@ body {
   letter-spacing: 1px;
   margin-bottom: 6px;
   white-space: nowrap;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 10, 20, 0.8);
   padding: 2px 8px;
-  border-radius: 6px;
+  border: 1px solid var(--cyber-blue);
+  border-radius: 4px;
+  box-shadow: 0 0 5px rgba(0, 243, 255, 0.3);
 }
 .sushi-reading .matched {
-  color: #ffd700;
+  color: var(--cyber-pink);
   font-weight: 900;
+  text-shadow: 0 0 5px var(--cyber-pink);
 }
 .sushi-reading .unmatched {
-  color: #ccc;
+  color: var(--cyber-blue);
+  opacity: 0.7;
 }
 .sushi-emoji {
   font-size: 3rem;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(0 0 5px rgba(0, 243, 255, 0.5));
   transition:
     transform 0.15s,
     filter 0.15s;
@@ -317,16 +349,17 @@ body {
 .sushi-plate {
   width: 80px;
   height: 16px;
-  background: radial-gradient(ellipse, #eee, #aaa);
+  background: radial-gradient(ellipse, #333, #111);
+  border: 1px solid var(--cyber-blue);
   border-radius: 50%;
   margin-top: -4px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
 }
 .sushi-item.glowing .sushi-emoji {
-  filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.8));
+  filter: drop-shadow(0 0 15px var(--cyber-pink));
 }
 .sushi-item.almost .sushi-emoji {
-  filter: drop-shadow(0 0 25px rgba(255, 215, 0, 1));
+  filter: drop-shadow(0 0 25px var(--cyber-pink));
   transform: scale(1.2);
 }
 .sushi-item.captured {
@@ -336,10 +369,12 @@ body {
   0% {
     transform: translateY(0) scale(1);
     opacity: 1;
+    filter: hue-rotate(0deg);
   }
   50% {
     transform: translateY(-60px) scale(1.3);
     opacity: 0.8;
+    filter: hue-rotate(180deg) brightness(2);
   }
   100% {
     transform: translateY(-120px) scale(0.5);
@@ -356,37 +391,46 @@ body {
   justify-content: center;
   gap: 1em;
   flex-shrink: 0;
+  background: radial-gradient(circle, rgba(0, 243, 255, 0.05) 0%, transparent 70%);
 }
 #input-display {
   font-family: "Fira Code", monospace;
   font-size: 3rem;
   font-weight: 900;
-  color: #ffd700;
+  color: var(--cyber-blue);
   min-height: 3.5rem;
   letter-spacing: 4px;
-  text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+  text-shadow:
+    0 0 10px var(--cyber-blue),
+    0 0 20px var(--cyber-blue);
+  border-bottom: 2px solid rgba(0, 243, 255, 0.3);
+  padding: 0 20px;
 }
 #input-hint {
+  font-family: "Orbitron", sans-serif;
   font-size: 1.1rem;
-  color: #aaa;
+  color: var(--cyber-pink);
   font-weight: 700;
+  text-shadow: 0 0 5px var(--cyber-pink);
+  letter-spacing: 0.1em;
 }
 
 /* Score Popup */
 .score-popup {
   position: absolute;
+  font-family: "Orbitron", sans-serif;
   font-size: 1.4rem;
   font-weight: 900;
-  color: #ffd700;
+  color: var(--cyber-blue);
   pointer-events: none;
   z-index: 20;
   animation: scoreFloat 1s ease forwards;
-  text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+  text-shadow: 0 0 10px var(--cyber-blue);
 }
 .score-popup.simultaneous {
   font-size: 2rem;
-  color: #ff6b6b;
-  text-shadow: 0 0 20px rgba(255, 107, 107, 0.8);
+  color: var(--cyber-pink);
+  text-shadow: 0 0 20px var(--cyber-pink);
 }
 @keyframes scoreFloat {
   0% {
@@ -405,11 +449,12 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.2);
-  border-top: 2px solid rgba(255, 255, 255, 0.05);
+  background: rgba(0, 5, 10, 0.5);
+  border-top: 1px solid rgba(0, 243, 255, 0.2);
   flex-shrink: 0;
   padding: 0 2em;
   width: 100%;
+  box-shadow: 0 -10px 20px rgba(0, 0, 0, 0.5);
 }
 .taisho-container {
   display: flex;
@@ -425,6 +470,7 @@ body {
   width: 100px; /* 大将の専有幅を固定 */
   text-align: center;
   animation: taishoIdle 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
 }
 @keyframes taishoIdle {
   0%,
@@ -436,29 +482,35 @@ body {
   }
 }
 #taisho-bubble {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 20, 40, 0.8);
   padding: 1rem 2rem;
-  border-radius: 24px;
+  border-radius: 4px;
+  font-family: "Fira Code", "M PLUS Rounded 1c", monospace;
   font-size: 1.3rem;
   font-weight: 700;
+  color: var(--cyber-blue);
   min-height: 4.5rem;
   display: flex;
   align-items: center;
   flex-grow: 1; /* 残りのスペースを埋める */
   max-width: 550px;
   position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--cyber-blue);
   transition: opacity 0.2s;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.15);
+  text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
 }
 #taisho-bubble::before {
   content: "";
   position: absolute;
-  left: -16px;
+  left: -12px;
   top: 50%;
   transform: translateY(-50%);
-  border: 8px solid transparent;
-  border-right-color: rgba(255, 255, 255, 0.1);
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 12px solid var(--cyber-blue);
 }
 
 /* Result Screen */
@@ -578,12 +630,16 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  font-family: "Orbitron", sans-serif;
   font-size: 3rem;
   font-weight: 900;
   pointer-events: none;
   opacity: 0;
   z-index: 30;
-  text-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+  color: var(--cyber-pink);
+  text-shadow:
+    0 0 20px var(--cyber-pink),
+    0 0 40px var(--cyber-pink);
 }
 #combo-burst.show {
   animation: comboBurst 0.8s ease forwards;
@@ -642,10 +698,13 @@ body {
   align-items: center;
   justify-content: center;
   background: rgba(0, 0, 0, 0.6);
+  font-family: "Orbitron", sans-serif;
   font-size: 6rem;
   font-weight: 900;
-  color: #ffd700;
-  text-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
+  color: var(--cyber-blue);
+  text-shadow:
+    0 0 20px var(--cyber-blue),
+    0 0 40px var(--cyber-blue);
 }
 
 @media (max-width: 768px) {
