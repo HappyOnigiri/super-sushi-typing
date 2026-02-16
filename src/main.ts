@@ -1,10 +1,10 @@
+import packageJson from "../package.json";
 import { type GameConfig, NORMAL_CONFIG, TOKUJO_CONFIG } from "./config";
 import { RANKS } from "./data/ranks";
 import { RANDOM_SUSHI_DEFS, SUSHI_DEFS, SUSHI_GROUPS } from "./data/sushi";
 import { TAISHO_LINES } from "./data/taisho";
 import { generateVariants } from "./romaji";
 import type { ActiveSushi, RankDef, SushiDef } from "./types";
-import packageJson from "../package.json";
 
 let currentConfig: GameConfig = NORMAL_CONFIG;
 
@@ -40,7 +40,7 @@ let idleTimer = 0;
 let lastKeyTime = 0;
 let animFrameId = 0;
 let gameTimerId = 0;
-let currentTaishoEmoji = "🧑🏻‍🍳";
+const currentTaishoEmoji = "🧑🏻‍🍳";
 let countdownIntervalId = 0;
 
 // DOM helper
@@ -222,6 +222,15 @@ function pickNextReadingForSpawn(): string {
 
 let lastSpawnLane = -1;
 
+const BASE_WIDTH = 1000;
+
+function getScaleRatio(): number {
+	const currentWidth = laneArea.clientWidth || BASE_WIDTH;
+	return currentWidth / BASE_WIDTH;
+}
+
+// function definition moved down
+
 function spawnSushi(reading: string, laneIndex: number) {
 	const def = SUSHI_MAP.get(reading);
 	if (!def) return;
@@ -231,12 +240,17 @@ function spawnSushi(reading: string, laneIndex: number) {
 		currentConfig.LANE_Y_POSITIONS[laneIndex] ||
 		currentConfig.LANE_Y_POSITIONS[0];
 
+	const scaleRatio = getScaleRatio();
+	// Spawn slightly off-screen to the right, scaled
+	const spawnX =
+		laneArea.clientWidth + currentConfig.SPAWN_X_OFFSET * scaleRatio;
+
 	const sushi: ActiveSushi = {
 		id: sushiIdCounter++,
 		def,
 		patterns,
 		matchIndices: new Array(patterns.length).fill(0),
-		x: laneArea.clientWidth + currentConfig.SPAWN_X_OFFSET,
+		x: spawnX,
 		y: y,
 		el: null!,
 		captured: false,
@@ -250,6 +264,8 @@ function spawnSushi(reading: string, laneIndex: number) {
 
 	activeSushi.push(sushi);
 }
+
+// ... (omitted) ...
 
 // ---------- Score Popup ----------
 
@@ -282,9 +298,10 @@ function showComboBurst(text: string) {
 
 function setRandomTaisho() {
 	const emojis = currentConfig.TAISHO_EMOJIS;
-	currentTaishoEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+	const currentTaishoEmoji = emojis[Math.floor(Math.random() * emojis.length)];
 	taishoEmoji.textContent = currentTaishoEmoji;
-	taishoBubble.textContent = getTaishoLine("start") || "いらっしゃい！何でも握るよ！";
+	taishoBubble.textContent =
+		getTaishoLine("start") || "いらっしゃい！何でも握るよ！";
 	clearTimeout(taishoTimeout);
 }
 
@@ -423,17 +440,27 @@ function gameLoop(timestamp: number) {
 
 	const elapsed = (timestamp - startTime) / 1000;
 	maybeStartNextGroup(elapsed);
-	const speed = Math.min(
+
+	const scaleRatio = getScaleRatio();
+
+	// Calculate base speed
+	const baseSpeed = Math.min(
 		currentConfig.INITIAL_SPEED + elapsed * currentConfig.SPEED_UP_RATE,
 		currentConfig.MAX_SPEED,
 	);
+
+	// Apply scale ratio to speed so visual traversal time is consistent
+	const speed = baseSpeed * scaleRatio;
+
+	// Scale Despawn X
+	const despawnX = currentConfig.DESPAWN_X * scaleRatio;
 
 	for (const sushi of activeSushi) {
 		if (sushi.captured) continue;
 		sushi.x -= speed;
 		sushi.el.style.left = sushi.x + "px";
 
-		if (sushi.x < currentConfig.DESPAWN_X) {
+		if (sushi.x < despawnX) {
 			sushi.el.remove();
 			combo = 0;
 			comboValue.textContent = "0";
@@ -443,7 +470,7 @@ function gameLoop(timestamp: number) {
 
 	activeSushi = activeSushi.filter((s) => {
 		if (s.captured) return true;
-		if (s.x < currentConfig.DESPAWN_X) return false;
+		if (s.x < despawnX) return false;
 		return true;
 	});
 
@@ -460,6 +487,7 @@ function gameLoop(timestamp: number) {
 	) {
 		const laneWidth = laneArea.clientWidth || 800;
 		const availableLanes: number[] = [];
+		const minSpawnDistance = currentConfig.MIN_SPAWN_DISTANCE * scaleRatio;
 
 		// Check each lane for space
 		for (let i = 0; i < currentConfig.LANE_Y_POSITIONS.length; i++) {
@@ -475,7 +503,15 @@ function gameLoop(timestamp: number) {
 					(max, s) => Math.max(max, s.x),
 					-9999,
 				);
-				if (rightMostX < laneWidth - currentConfig.MIN_SPAWN_DISTANCE) {
+				// Check distance including scaled MIN_SPAWN_DISTANCE
+				// Also consider that rightMostX is the *left* edge of the sushi?
+				// The prompt says "sushi.x" is generally used for position.
+				// Assuming s.x is left edge.
+				// We want the new sushi (spawn at laneWidth + offset) to be far enough.
+				// The condition "rightMostX < laneWidth - MIN_SPAWN_DISTANCE" implies:
+				// If the rightmost existing sushi is further to the left than (laneWidth - distance),
+				// then there is enough space (distance) between it and the right edge (where new one spawns).
+				if (rightMostX < laneWidth - minSpawnDistance) {
 					availableLanes.push(i);
 				}
 			}
@@ -777,7 +813,6 @@ document.addEventListener("keydown", (e) => {
 	}
 });
 
-
 // ---------- Software Keyboard ----------
 
 function initSoftwareKeyboard() {
@@ -827,19 +862,19 @@ function initSoftwareKeyboard() {
 				},
 				{ passive: false },
 			);
-            
-            // Mouse handling for testing
-            keyEl.addEventListener("mousedown", (e) => {
-                e.preventDefault();
-                handleKeyInput(char);
-                keyEl.classList.add("active");
-            });
-            keyEl.addEventListener("mouseup", () => {
-                keyEl.classList.remove("active");
-            });
-            keyEl.addEventListener("mouseleave", () => {
-                keyEl.classList.remove("active");
-            });
+
+			// Mouse handling for testing
+			keyEl.addEventListener("mousedown", (e) => {
+				e.preventDefault();
+				handleKeyInput(char);
+				keyEl.classList.add("active");
+			});
+			keyEl.addEventListener("mouseup", () => {
+				keyEl.classList.remove("active");
+			});
+			keyEl.addEventListener("mouseleave", () => {
+				keyEl.classList.remove("active");
+			});
 
 			rowEl.appendChild(keyEl);
 		});
@@ -853,53 +888,64 @@ function initSoftwareKeyboard() {
 			spacer.className = "key-spacer";
 			spacer.style.flex = "1.5";
 			rowEl.appendChild(spacer);
-            
-            // Add Backspace/Hyphen if needed? 
-            // Current input doesn't really need backspace as it's just typing forward.
-            // But maybe a hyphen '-' is needed for some romaji?
-            // Checking existing code, /^[a-zA-Z-]$/ is allowed.
-            const hyphenKey = document.createElement("div");
-            hyphenKey.className = "key";
-            hyphenKey.textContent = "-";
-            hyphenKey.dataset.key = "-";
-            hyphenKey.addEventListener("touchstart", (e) => {
-                e.preventDefault();
-                handleKeyInput("-");
-                hyphenKey.classList.add("active");
-                setTimeout(() => hyphenKey.classList.remove("active"), 100);
-            }, { passive: false });
-             hyphenKey.addEventListener("mousedown", (e) => {
-                e.preventDefault();
-                handleKeyInput("-");
-                hyphenKey.classList.add("active");
-            });
-             hyphenKey.addEventListener("mouseup", () => {
-                hyphenKey.classList.remove("active");
-            });
-            hyphenKey.addEventListener("mouseleave", () => {
-                hyphenKey.classList.remove("active");
-            });
-            rowEl.appendChild(hyphenKey);
+
+			// Add Backspace/Hyphen if needed?
+			// Current input doesn't really need backspace as it's just typing forward.
+			// But maybe a hyphen '-' is needed for some romaji?
+			// Checking existing code, /^[a-zA-Z-]$/ is allowed.
+			const hyphenKey = document.createElement("div");
+			hyphenKey.className = "key";
+			hyphenKey.textContent = "-";
+			hyphenKey.dataset.key = "-";
+			hyphenKey.addEventListener(
+				"touchstart",
+				(e) => {
+					e.preventDefault();
+					handleKeyInput("-");
+					hyphenKey.classList.add("active");
+					setTimeout(() => hyphenKey.classList.remove("active"), 100);
+				},
+				{ passive: false },
+			);
+			hyphenKey.addEventListener("mousedown", (e) => {
+				e.preventDefault();
+				handleKeyInput("-");
+				hyphenKey.classList.add("active");
+			});
+			hyphenKey.addEventListener("mouseup", () => {
+				hyphenKey.classList.remove("active");
+			});
+			hyphenKey.addEventListener("mouseleave", () => {
+				hyphenKey.classList.remove("active");
+			});
+			rowEl.appendChild(hyphenKey);
 		}
 
 		keyboardArea.appendChild(rowEl);
 	});
-    
-     // Prevent double-tap zoom on the keyboard area
-    keyboardArea.addEventListener('touchstart', (e) => {
-        if (e.target === keyboardArea || (e.target as HTMLElement).classList.contains('keyboard-row')) {
-            e.preventDefault();
-        }
-    }, { passive: false });
+
+	// Prevent double-tap zoom on the keyboard area
+	keyboardArea.addEventListener(
+		"touchstart",
+		(e) => {
+			if (
+				e.target === keyboardArea ||
+				(e.target as HTMLElement).classList.contains("keyboard-row")
+			) {
+				e.preventDefault();
+			}
+		},
+		{ passive: false },
+	);
 }
 
 // ---------- Keyboard Toggle ----------
 
 const keyboardToggleBtn = document.getElementById("keyboard-toggle-btn");
 if (keyboardToggleBtn) {
-    keyboardToggleBtn.addEventListener("click", () => {
-        gameScreen.classList.toggle("keyboard-active");
-    });
+	keyboardToggleBtn.addEventListener("click", () => {
+		gameScreen.classList.toggle("keyboard-active");
+	});
 }
 
 // ---------- Initial State ----------
@@ -907,7 +953,7 @@ if (keyboardToggleBtn) {
 initSoftwareKeyboard();
 // Auto-show keyboard on mobile/tablet
 if (window.innerWidth <= 1024) {
-    gameScreen.classList.add("keyboard-active");
+	gameScreen.classList.add("keyboard-active");
 }
 
 gameState = "title";
