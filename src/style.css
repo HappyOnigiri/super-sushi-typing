@@ -781,7 +781,12 @@ body {
 
 @media (max-width: 768px) {
   #title-screen h1 {
-    font-size: 2rem;
+    font-size: 1.8rem;
+    margin-bottom: 0;
+  }
+  #title-screen h1::after {
+    font-size: 0.8rem;
+    margin-top: 0.2rem;
   }
   .header-value {
     font-size: 1.1rem;
@@ -789,6 +794,8 @@ body {
   #game-header {
     gap: 1.5em;
     font-size: 1rem;
+    padding: 0.2em 0;
+    min-height: 40px;
   }
   .sushi-name {
     font-size: 0.7rem;
@@ -815,60 +822,98 @@ body {
   }
   
   /* Result Screen Mobile */
+  #result-screen {
+    padding: 0.5em;
+    justify-content: center;
+  }
   #result-screen h2 {
-    font-size: 2rem;
+    font-size: 1.8rem;
+    margin-bottom: 0.2em;
+  }
+  #result-mode {
+    font-size: 0.8rem;
+    padding: 0.1em 0.8em;
+    margin-bottom: 0.2em;
   }
   #result-rank-emoji {
-    font-size: 4rem;
+    font-size: 3rem;
+    margin-bottom: 0;
   }
   #result-rank-name {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
+    margin-bottom: 0.2em;
   }
   #result-rank-comment {
-    font-size: 1rem;
-    margin-bottom: 1em;
+    font-size: 0.9rem;
+    margin-bottom: 0.8em;
   }
   .result-stats {
     grid-template-columns: 1fr 1fr;
-    gap: 0.8em;
+    gap: 0.5em;
+    margin: 0.5em 0;
   }
   .result-stat {
-    padding: 0.8em 1em;
+    padding: 0.5em 0.8em;
     min-width: auto;
+    border-radius: 12px;
+  }
+  .result-stat-label {
+    font-size: 0.7rem;
+    margin-bottom: 0;
   }
   .result-stat-value {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
   }
   #result-taisho {
-    font-size: 1rem;
-    padding: 1em 1.5em;
+    font-size: 0.9rem;
+    padding: 0.8em 1.2em;
+    margin: 0.5em 0 1em 0;
+    min-height: auto;
   }
   .result-btn {
-    font-size: 1.1rem;
-    padding: 0.6em 1.5em;
+    font-size: 1rem;
+    padding: 0.6em 1.2em;
+    margin: 0.3em;
+    width: 100%;
+    max-width: 280px;
   }
 
-  /* Compact layout for mobile */
-  #title-screen .rules {
-    margin-bottom: 1.5em;
+  /* Compact layout for mobile Title Screen */
+  #title-screen {
+    padding: 1em;
+    justify-content: center;
   }
   .title-image-container {
-    margin: 0.5rem 0 1.5rem 0;
+    margin: 0.5rem 0 1rem 0;
   }
+  .title-image {
+    width: 140px; /* Smaller image */
+  }
+  #title-screen .rules {
+    font-size: 0.7rem;
+    padding: 0.8em 1.2em;
+    margin-bottom: 1.2em;
+    line-height: 1.4;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  /* Arrange buttons horizontally if space allows, or stack compactly */
   #title-screen .start-btn-container {
     gap: 0.8rem;
     width: 100%;
     justify-content: center;
-    padding: 0 1rem;
+    padding: 0;
+    flex-direction: row; /* Ensure row even on mobile */
   }
   #title-screen .start-btn {
-    font-size: 1rem;
+    font-size: 0.9rem;
     padding: 0.8em 0;
-    width: 44%;
-    max-width: 200px;
+    width: 45%; /* Slightly less than half */
+    max-width: 160px;
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 44px; /* Fixed height for touch targets */
   }
 }
 
@@ -910,19 +955,23 @@ body {
 
 @media (max-height: 700px) {
   #title-screen h1 {
-    font-size: 2.5rem;
+    font-size: 1.8rem;
+    margin-bottom: 0;
   }
   .title-image {
-    width: 200px;
+    width: 140px;
   }
   #title-screen .rules {
-    font-size: 0.85rem;
-    padding: 1em 1.5em;
-    margin-bottom: 1.5em;
+    font-size: 0.7rem;
+    padding: 0.8em 1.2em;
+    margin-bottom: 1em;
+    line-height: 1.4;
   }
   #title-screen .start-btn {
-    font-size: 1.4rem;
-    padding: 0.6em 2em;
+    font-size: 1rem;
+    padding: 0.6em 0;
+    width: 45%;
+    max-width: 160px;
   }
   
   /* Game Screen Adjustments */
@@ -930,35 +979,36 @@ body {
     min-height: auto;
     gap: 1em;
     padding: 0.2em 0;
+    font-size: 1rem;
   }
   .header-value {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
   
   #lane-area {
-    min-height: 120px;
+    min-height: 100px;
   }
   
   #input-area {
-    padding: 0.5em 0;
+    padding: 0.2em 0;
     gap: 0.2em;
   }
   #input-display {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     min-height: 2rem;
     padding: 0 10px;
   }
   
   #taisho-area {
-    padding: 0.5em 1em;
+    padding: 0.2em 1em;
   }
   #taisho-emoji {
-    font-size: 2.5rem;
-    width: 60px;
+    font-size: 2rem;
+    width: 50px;
   }
   #taisho-bubble {
-    font-size: 0.9rem;
-    min-height: 3rem;
+    font-size: 0.8rem;
+    min-height: 2.5rem;
   }
   
   /* Result Screen Height Adjustments */
@@ -967,11 +1017,11 @@ body {
     justify-content: center;
   }
   #result-screen h2 {
-    font-size: 2rem;
+    font-size: 1.8rem;
     margin-bottom: 0.2em;
   }
   #result-mode {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     padding: 0.1em 0.8em;
     margin-bottom: 0.2em;
   }
@@ -985,31 +1035,34 @@ body {
   }
   #result-rank-comment {
     font-size: 0.9rem;
-    margin-bottom: 0.5em;
+    margin-bottom: 0.8em;
   }
   .result-stats {
     margin: 0.5em 0;
     gap: 0.5em;
+    grid-template-columns: 1fr 1fr;
   }
   .result-stat {
-    padding: 0.5em 1em;
-    min-width: 120px;
+    padding: 0.5em 0.8em;
+    min-width: auto;
+    border-radius: 12px;
   }
   .result-stat-label {
-    font-size: 0.8rem;
-    margin-bottom: 0.1em;
+    font-size: 0.7rem;
+    margin-bottom: 0;
   }
   .result-stat-value {
     font-size: 1.3rem;
   }
   #result-taisho {
     font-size: 0.9rem;
-    margin: 0.5em 0;
-    padding: 0.5em 1.5em;
+    margin: 0.5em 0 1em 0;
+    padding: 0.8em 1.2em;
+    min-height: auto;
   }
   .result-btn {
     font-size: 1rem;
-    padding: 0.5em 1.5em;
+    padding: 0.6em 1.2em;
     margin: 0.2em;
   }
 }
