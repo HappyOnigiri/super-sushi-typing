@@ -1,3 +1,4 @@
+import { inject } from "@vercel/analytics";
 import packageJson from "../package.json";
 import { type GameConfig, NORMAL_CONFIG, TOKUJO_CONFIG } from "./config";
 import { RANKS } from "./data/ranks";
@@ -5,6 +6,9 @@ import { RANDOM_SUSHI_DEFS, SUSHI_DEFS, SUSHI_GROUPS } from "./data/sushi";
 import { TAISHO_LINES } from "./data/taisho";
 import { generateVariants } from "./romaji";
 import type { ActiveSushi, RankDef, SushiDef } from "./types";
+
+
+inject();
 
 let currentConfig: GameConfig = NORMAL_CONFIG;
 
