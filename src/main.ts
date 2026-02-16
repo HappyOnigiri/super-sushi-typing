@@ -308,8 +308,8 @@ function handleKeyInput(char: string, isDebugAutoMatch = false) {
 
 	if (!isDebugAutoMatch) {
 		inputDisplay.textContent = (inputDisplay.textContent || "") + char;
-		if (inputDisplay.textContent && inputDisplay.textContent.length > 25) {
-			inputDisplay.textContent = inputDisplay.textContent.slice(-25);
+		if (inputDisplay.textContent && inputDisplay.textContent.length > 20) {
+			inputDisplay.textContent = inputDisplay.textContent.slice(-20);
 		}
 	}
 
@@ -777,7 +777,138 @@ document.addEventListener("keydown", (e) => {
 	}
 });
 
+
+// ---------- Software Keyboard ----------
+
+function initSoftwareKeyboard() {
+	const keyboardArea = document.getElementById("keyboard-area");
+	if (!keyboardArea) return;
+
+	const layout = [
+		["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
+		["a", "s", "d", "f", "g", "h", "j", "k", "l"],
+		["z", "x", "c", "v", "b", "n", "m"],
+	];
+
+	keyboardArea.innerHTML = ""; // Clear existing
+
+	layout.forEach((rowChars, rowIndex) => {
+		const rowEl = document.createElement("div");
+		rowEl.className = "keyboard-row";
+
+		// Indent for second and third rows to look like a real keyboard
+		if (rowIndex === 1) {
+			const spacer = document.createElement("div");
+			spacer.className = "key-spacer";
+			rowEl.appendChild(spacer);
+		} else if (rowIndex === 2) {
+			const spacer = document.createElement("div");
+			spacer.className = "key-spacer";
+			spacer.style.flex = "1.5";
+			rowEl.appendChild(spacer);
+		}
+
+		rowChars.forEach((char) => {
+			const keyEl = document.createElement("div");
+			keyEl.className = "key";
+			keyEl.textContent = char.toUpperCase();
+			keyEl.dataset.key = char;
+
+			// Touch handling
+			keyEl.addEventListener(
+				"touchstart",
+				(e) => {
+					e.preventDefault(); // Prevent scroll/zoom
+					e.stopPropagation();
+					handleKeyInput(char);
+					keyEl.classList.add("active");
+					// Remove active class after short delay
+					setTimeout(() => keyEl.classList.remove("active"), 100);
+				},
+				{ passive: false },
+			);
+            
+            // Mouse handling for testing
+            keyEl.addEventListener("mousedown", (e) => {
+                e.preventDefault();
+                handleKeyInput(char);
+                keyEl.classList.add("active");
+            });
+            keyEl.addEventListener("mouseup", () => {
+                keyEl.classList.remove("active");
+            });
+            keyEl.addEventListener("mouseleave", () => {
+                keyEl.classList.remove("active");
+            });
+
+			rowEl.appendChild(keyEl);
+		});
+
+		if (rowIndex === 1) {
+			const spacer = document.createElement("div");
+			spacer.className = "key-spacer";
+			rowEl.appendChild(spacer);
+		} else if (rowIndex === 2) {
+			const spacer = document.createElement("div");
+			spacer.className = "key-spacer";
+			spacer.style.flex = "1.5";
+			rowEl.appendChild(spacer);
+            
+            // Add Backspace/Hyphen if needed? 
+            // Current input doesn't really need backspace as it's just typing forward.
+            // But maybe a hyphen '-' is needed for some romaji?
+            // Checking existing code, /^[a-zA-Z-]$/ is allowed.
+            const hyphenKey = document.createElement("div");
+            hyphenKey.className = "key";
+            hyphenKey.textContent = "-";
+            hyphenKey.dataset.key = "-";
+            hyphenKey.addEventListener("touchstart", (e) => {
+                e.preventDefault();
+                handleKeyInput("-");
+                hyphenKey.classList.add("active");
+                setTimeout(() => hyphenKey.classList.remove("active"), 100);
+            }, { passive: false });
+             hyphenKey.addEventListener("mousedown", (e) => {
+                e.preventDefault();
+                handleKeyInput("-");
+                hyphenKey.classList.add("active");
+            });
+             hyphenKey.addEventListener("mouseup", () => {
+                hyphenKey.classList.remove("active");
+            });
+            hyphenKey.addEventListener("mouseleave", () => {
+                hyphenKey.classList.remove("active");
+            });
+            rowEl.appendChild(hyphenKey);
+		}
+
+		keyboardArea.appendChild(rowEl);
+	});
+    
+     // Prevent double-tap zoom on the keyboard area
+    keyboardArea.addEventListener('touchstart', (e) => {
+        if (e.target === keyboardArea || (e.target as HTMLElement).classList.contains('keyboard-row')) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+}
+
+// ---------- Keyboard Toggle ----------
+
+const keyboardToggleBtn = document.getElementById("keyboard-toggle-btn");
+if (keyboardToggleBtn) {
+    keyboardToggleBtn.addEventListener("click", () => {
+        gameScreen.classList.toggle("keyboard-active");
+    });
+}
+
 // ---------- Initial State ----------
+
+initSoftwareKeyboard();
+// Auto-show keyboard on mobile/tablet
+if (window.innerWidth <= 1024) {
+    gameScreen.classList.add("keyboard-active");
+}
 
 gameState = "title";
 titleScreen.style.display = "flex";
