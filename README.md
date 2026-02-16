@@ -3,8 +3,9 @@
 ![License](https://img.shields.io/badge/license-MIT-blue)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
 ![Vite](https://img.shields.io/badge/Vite-5.0-646CFF)
+![Version](https://img.shields.io/badge/version-v1.1.0-orange)
 
-<img src="public/title.png" alt="Quantum Maguro Tei Title" width="400">
+<img src="public/title.jpg" alt="Quantum Maguro Tei Title">
 
 
 ### 🚀 今すぐ遊ぶ: <a href="https://quantum-maguro.vercel.app/" target="_blank">quantum-maguro.vercel.app</a>
@@ -21,6 +22,14 @@
 - **ルール**: 流れてくる寿司に表示されたローマ字（例: `maguro`）をタイプして取り切ります。
 - **制限時間**: 60秒（最後の寿司が残っている間は取り切るまで続行）。
 - **入力**: `a-z` と `-` を受け付けます。`shi/si` などの表記ゆれも自動で許容されます。
+- **スマホ対応**: スマートフォンやタブレットでもプレイ可能！画面内のソフトウェアキーボードを使用してタイピングできます。
+- **結果を 𝕏 でシェア**: 獲得スコアや称号を 𝕏 (旧Twitter) でシェアして、他のプレイヤーと競いましょう。
+
+## ゲームモード
+
+- **通常モード**: 標準的な難易度。初めての方や、リラックスして楽しみたい方に。
+- **特上モード**: 熟練者向けのハードモード。寿司の流れる速度が速く、出現数も大幅にアップ！その分、獲得スコアも高くなります。通常とは異なる「大将」が現れることも…？
+
 
 ## スコアボーナス
 
